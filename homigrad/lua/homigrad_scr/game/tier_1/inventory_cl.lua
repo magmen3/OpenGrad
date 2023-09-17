@@ -73,7 +73,6 @@ local AmmoTypes = {
 	[11] = "vgui/wep_jack_hmcd_ied"
 	}
 
-local white = Color(255,255,255)
 local black = Color(0,0,0,128)
 local black2 = Color(64,64,64,128)
 
@@ -148,7 +147,7 @@ net.Receive("inventory",function()
 		surface.SetDrawColor(255,255,255,128)
 		surface.DrawOutlinedRect(1,1,w - 2,h - 2)
 
-		draw.SimpleText("Инвентарь "..nickname,"DefaultFixedDropShadow",6,6,white)
+		draw.SimpleText("Инвентарь "..nickname,"DefaultFixedDropShadow",6,6,color_white)
 	end
 
 	local x,y = 40,40
@@ -181,7 +180,7 @@ net.Receive("inventory",function()
 			surface.DrawOutlinedRect(1,1,w - 2,h - 2)
 
 			for i,text in pairs(text) do
-				draw.SimpleText(text,"DefaultFixedDropShadow",corner,corner + (i - 1) * 12,white)
+				draw.SimpleText(text,"DefaultFixedDropShadow",corner,corner + (i - 1) * 12,color_white)
 			end
 
 			local x,y = self:LocalToScreen(0,0)
@@ -233,7 +232,7 @@ net.Receive("inventory",function()
 			surface.DrawTexturedRect(2,2,w - 4,h - 4)
 
 			for i,text in pairs(text) do
-				draw.SimpleText(text,"DefaultFixedDropShadow",corner,corner + (i - 1) * 12,white)
+				draw.SimpleText(text,"DefaultFixedDropShadow",corner,corner + (i - 1) * 12,color_white)
 			end
 		end
 

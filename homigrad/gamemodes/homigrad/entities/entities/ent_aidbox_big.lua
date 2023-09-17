@@ -9,14 +9,14 @@ ENT.JModPreferredCarryAngles = Angle(-90, 90, 0)
 
 if SERVER then
 	function ENT:Initialize()
-		self.Entity:SetModel("models/props_junk/wood_crate001a.mdl")
-		self.Entity:SetMaterial("models/mat_jack_aidbox")
-		self.Entity:PhysicsInit(SOLID_VPHYSICS)
-		self.Entity:SetMoveType(MOVETYPE_VPHYSICS)
-		self.Entity:SetSolid(SOLID_VPHYSICS)
-		self.Entity:DrawShadow(true)
+		self:SetModel("models/props_junk/wood_crate001a.mdl")
+		self:SetMaterial("models/mat_jack_aidbox")
+		self:PhysicsInit(SOLID_VPHYSICS)
+		self:SetMoveType(MOVETYPE_VPHYSICS)
+		self:SetSolid(SOLID_VPHYSICS)
+		self:DrawShadow(true)
 		self.InitialVel = self.InitialVel or Vector(0, 0, 0)
-		local Phys = self.Entity:GetPhysicsObject()
+		local Phys = self:GetPhysicsObject()
 
 		if IsValid(Phys) then
 			Phys:Wake()
@@ -44,11 +44,11 @@ if SERVER then
 
 	function ENT:PhysicsCollide(data, physobj)
 		if data.Speed > 2000 and data.DeltaTime > .2 then
-			self.Entity:EmitSound("Boulder.ImpactHard")
-			self.Entity:EmitSound("Canister.ImpactHard")
-			self.Entity:EmitSound("Boulder.ImpactHard")
-			self.Entity:EmitSound("Canister.ImpactHard")
-			self.Entity:EmitSound("Boulder.ImpactHard")
+			self:EmitSound("Boulder.ImpactHard")
+			self:EmitSound("Canister.ImpactHard")
+			self:EmitSound("Boulder.ImpactHard")
+			self:EmitSound("Canister.ImpactHard")
+			self:EmitSound("Boulder.ImpactHard")
 			util.ScreenShake(data.HitPos, 99999, 99999, .5, 500)
 			local Poof = EffectData()
 			Poof:SetOrigin(data.HitPos)
@@ -62,7 +62,7 @@ if SERVER then
 				util.Decal("Rollermine.Crater", Tr.HitPos + Tr.HitNormal, Tr.HitPos - Tr.HitNormal)
 			end
 		elseif data.Speed > 80 and data.DeltaTime > .2 then
-			self.Entity:EmitSound("Canister.ImpactHard")
+			self:EmitSound("Canister.ImpactHard")
 		end
 
 		if data.DeltaTime > .1 then
@@ -73,7 +73,7 @@ if SERVER then
 	end
 
 	function ENT:OnTakeDamage(dmginfo)
-		self.Entity:TakePhysicsDamage(dmginfo)
+		self:TakePhysicsDamage(dmginfo)
 	end
 
 	local function SpawnItem(itemClass, pos, owner, resourceAmt)
@@ -231,7 +231,6 @@ if SERVER then
 				self:GetPhysicsObject():SetDragCoefficient(1)
 				self:GetPhysicsObject():SetAngleDragCoefficient(1)
 				self:SetDTBool(0, false)
-				self:NextThink(Time + .015)
 
 				return true
 			end
@@ -250,8 +249,6 @@ if SERVER then
 				Foof:SetAngles(Angle(100, 255, 100))
 				Foof:SetStart(self:GetVelocity())
 				util.Effect("eff_jack_gmod_aidboxsignal", Foof, true, true)
-				self:NextThink(Time + .1)
-
 				return true
 			end
 		end
@@ -264,7 +261,6 @@ if SERVER then
 			end
 
 			self:SetDTFloat(0, self.Opacity)
-			self:NextThink(Time + .01)
 
 			return true
 		end

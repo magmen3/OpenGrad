@@ -12,17 +12,17 @@ Organs = {
 	['spine']=5
 }
 
-RagdollDamageBoneMul={		--Умножения урона при попадании по регдоллу
+RagdollDamageBoneMul={ -- Умножения урона при попадании по регдоллу
 	[HITGROUP_LEFTLEG]=0.5,
 	[HITGROUP_RIGHTLEG]=0.5,
 
-	[HITGROUP_GENERIC]=1,
+	[HITGROUP_GENERIC]=0.9,
 
 	[HITGROUP_LEFTARM]=0.5,
 	[HITGROUP_RIGHTARM]=0.5,
 
-	[HITGROUP_CHEST]=1,
-	[HITGROUP_STOMACH]=1,
+	[HITGROUP_CHEST]=0.85,
+	[HITGROUP_STOMACH]=0.9,
 
 	[HITGROUP_HEAD]=2,
 }
@@ -110,7 +110,7 @@ function ReturnPlyInfo(ply) -- возвращение информации иг�
 
     for name, wepinfo in pairs(info.Weapons or {}) do
         local weapon = ply:Give(name, true)
-        if IsValid(weapon) and wepinfo.Clip1!=nil and wepinfo.Clip2!=nil then
+        if IsValid(weapon) and wepinfo.Clip1~=nil and wepinfo.Clip2~=nil then
             weapon:SetClip1(wepinfo.Clip1)
             weapon:SetClip2(wepinfo.Clip2)
         end
@@ -309,13 +309,20 @@ end
 end)
 
 hook.Add("PlayerSay","huyasds",function(ply,text)
-	if ply:IsAdmin() and string.lower(text)=="1" then
+	if ply:IsAdmin() and string.lower(text)=="!hostageply" then
+		local hostagemodels = {
+			"models/player/hostage/hostage_01.mdl",
+			"models/player/hostage/hostage_02.mdl",
+			"models/player/hostage/hostage_03.mdl",
+			"models/player/hostage/hostage_04.mdl"
+		}
 		local ent = ply:GetEyeTrace().Entity
 		if ent:IsPlayer() then
 			ply:ChatPrint(ent:Nick(),ent:EntIndex())
-			--[[PrintMessage(HUD_PRINTTALK,tostring(ply:Name()).." связал "..tostring(ent:Name()))
+			print(tostring(ply:Name()).." связал "..tostring(ent:Name()))
 			ent:StripWeapons()
 			ent:Give("weapon_hands")
+			ent:SetModel(table.Random(hostagemodels))
 			Faking(ent)
 			timer.Simple(0,function()
 				local enta = ent:GetNWEntity("Ragdoll")
@@ -324,10 +331,10 @@ hook.Add("PlayerSay","huyasds",function(ply,text)
 					constraint.Rope(enta,enta,5,7,Vector(0,0,0),Vector(0,0,0),-2,2,0,4,"cable/rope.vmt",false,Color(255,255,255))
 				end
 			end)
-			--ent.Hostage = true--]]
+			ent.Hostage = true
 		elseif ent:IsRagdoll() then
 			ply:ChatPrint(IsValid(RagdollOwner(ent)) and RagdollOwner(ent):Name())
-			--[[--ent:StripWeapons()
+			--ent:StripWeapons()
 			--ent:Give("weapon_hands")
 			--Faking(ent)
 			timer.Simple(0,function()
@@ -336,7 +343,7 @@ hook.Add("PlayerSay","huyasds",function(ply,text)
 				for i=1,3 do
 					constraint.Rope(enta,enta,5,7,Vector(0,0,0),Vector(0,0,0),-2,2,0,4,"cable/rope.vmt",false,Color(255,255,255))
 				end
-			end)--]]
+			end)
 		end
 		return ""
 	end
@@ -772,9 +779,9 @@ function PlayerMeta:CreateRagdoll(attacker,dmginfo) --изменение фун�
 		net.Send(self)
         rag.Info=self.Info
         if IsValid(self:GetActiveWeapon()) then
-            self.curweapon=nil
+            self.curweapon = nil
             if table.HasValue(Guns,self:GetActiveWeapon():GetClass()) then
-				self.curweapon=self:GetActiveWeapon():GetClass()
+				self.curweapon = self:GetActiveWeapon():GetClass()
 				SpawnWeapon(self,self:GetActiveWeapon():Clip1()).rag = rag
 			end
 			rag.curweapon = self.curweapon
@@ -1094,7 +1101,7 @@ hook.Add("Player Think","FakeControl",function(ply,time) --управление 
 			head:ComputeShadowControl(shadowparams)
 		end
 		end
-		if(ply:KeyDown(IN_SPEED)) and !RagdollOwner(rag).Otrub and !timer.Exists("StunTime"..ply:EntIndex()) then
+		if (ply:KeyDown(IN_SPEED)) and !RagdollOwner(rag).Otrub and !timer.Exists("StunTime"..ply:EntIndex()) then
 			local bone = rag:TranslateBoneToPhysBone(rag:LookupBone( "ValveBiped.Bip01_L_Hand" ))
 			local phys = rag:GetPhysicsObjectNum( rag:TranslateBoneToPhysBone(rag:LookupBone( "ValveBiped.Bip01_L_Hand" )) )
 			if ply.Organs["artery"] == 0 and !TwoHandedOrNo[ply.curweapon] then
@@ -1332,7 +1339,7 @@ hook.Add("PlayerSwitchWeapon","fakewep",function(ply,oldwep,newwep)
 	if ply.Otrub then return true end
 
 	if ply.fake then
-		if IsValid(ply.Info.ActiveWeapon2) and IsValid(ply.wep) and ply.wep.Clip!=nil and ply.wep.Amt!=nil and ply.wep.AmmoType!=nil then
+		if IsValid(ply.Info.ActiveWeapon2) and IsValid(ply.wep) and ply.wep.Clip~=nil and ply.wep.Amt~=nil and ply.wep.AmmoType~=nil then
 			ply.Info.ActiveWeapon2:SetClip1((ply.wep.Clip or 0))
 			ply:SetAmmo((ply.wep.Amt or 0), (ply.wep.AmmoType or 0))
 		end
@@ -1354,7 +1361,7 @@ hook.Add("PlayerSwitchWeapon","fakewep",function(ply,oldwep,newwep)
 		end
 		net.Start("ebal_chellele")
 		net.WriteEntity(ply)
-		net.WriteString(ply.curweapon)
+		net.WriteString(ply.curweapon or "")
 		net.Broadcast()
 		return true
 	end

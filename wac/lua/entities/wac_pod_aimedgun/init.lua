@@ -58,7 +58,7 @@ function ENT:fire()
 			explode:SetKeyValue("spawnflags", "19")
 			explode:Fire("Explode", 0, 0)
 			timer.Simple(5,function() explode:Remove() end)
-			util.BlastDamage(self, self.Owner, tr.HitPos, 40, 20)
+			util.BlastDamage(self, self:GetOwner(), tr.HitPos, 40, 20)
 			local ed = EffectData()
 			ed:SetEntity(self)
 			ed:SetAngles(tr.HitNormal:Angle())
@@ -66,7 +66,7 @@ function ENT:fire()
 			ed:SetScale(30)
 			util.Effect("wac_impact_m197",ed)
 		end
-		self.Entity:Remove()
+		self:Remove()
 	end]]--
 
 	self.sounds.shoot1p:Stop()

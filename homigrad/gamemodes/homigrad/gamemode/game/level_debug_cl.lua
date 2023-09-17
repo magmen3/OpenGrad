@@ -16,4 +16,4 @@ concommand.Add("hg_roundinfo",function()
 	if roundTimeStart and roundTime then
 		print("time left	" .. tostring(math.Round(roundTimeStart + roundTime - CurTime())))
 	end
-end)
+end,nil,"Prints debug info about round")

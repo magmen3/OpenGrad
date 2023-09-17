@@ -1,7 +1,7 @@
-"homigrad"
+"opengrad"
 {
-	"base"		"sandbox"
-	"title"		"Homigrad"
-	"maps"		""
+	"base"			"sandbox"
+	"title"			"OpenGrad"
+	"maps"			"^hmcd_|^tdm_|^dm_"
 	"menusystem"	"1"
 }

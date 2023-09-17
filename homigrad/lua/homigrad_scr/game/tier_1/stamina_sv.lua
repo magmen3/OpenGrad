@@ -56,11 +56,11 @@ hook.Add("Player Think","saystamina",function(ply,time)
 	end
 
 	if ply:GetMoveType() == MOVETYPE_WALK and ply:IsSprinting() and ply.speeed > 1 then
-		ply.stamina = ply.stamina - 1 * ply.speeed / 150
+		ply.stamina = ply.stamina - 1 * ply.speeed / 70
 	end
 
 	if ply:WaterLevel() == 3 then
-		ply.stamina = ply.stamina - 2
+		ply.stamina = ply.stamina - 10
 	end
 	
 	if ply.stamina < 20 and ent:WaterLevel() == 3 then
@@ -78,6 +78,10 @@ hook.Add("Player Think","saystamina",function(ply,time)
 		end--]]
 	end
 
+	if ply.stamina <= 20 and not ply.fake then
+		Faking(ply)
+	end
+
 	ply.stamina = math.Clamp(ply.stamina,0,100)
 
 	net.Start("info_adrenaline")
@@ -91,6 +95,7 @@ hook.Add("Player Think","saystamina",function(ply,time)
 	net.Start("info_staminamul")
 	net.WriteFloat(k)
 	net.Send(ply)
+	--print(math.Round(ply.stamina))
 
 	ply.staminamul = k
 end)

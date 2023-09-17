@@ -93,7 +93,7 @@ function ENT:CalcThirdPersonView(k,p,pos,ang,view)
 		view.angles = p.wac.viewAng + self:GetAngles()
 	end
 	
-	local tr = util.QuickTrace(self:LocalToWorld(Vector(-50,0,100))+self:GetVelocity()/50,view.angles:Forward()*-self.ThirdPDist,{self.Entity,self:GetNWEntity("rotor_rear")})
+	local tr = util.QuickTrace(self:LocalToWorld(Vector(-50,0,100))+self:GetVelocity()/50,view.angles:Forward()*-self.ThirdPDist,{self,self:GetNWEntity("rotor_rear")})
 	view.origin=tr.HitPos-tr.Normal*10
 	return view
 end

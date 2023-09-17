@@ -162,22 +162,18 @@ hook.Add("EntityTakeDamage","ragdamage",function(ent,dmginfo) --урон по р
 	end
 
 	dmginfo:SetDamage(dmginfo:GetDamage() * armorMul)
-	local rubatPidor = DamageInfo()
-	rubatPidor:SetAttacker(dmginfo:GetAttacker())
-	--rubatPidor:SetInflictor(dmginfo:GetInflictor())
-	rubatPidor:SetDamage(dmginfo:GetDamage())
-	rubatPidor:SetDamageType(dmginfo:GetDamageType())
-	rubatPidor:SetDamagePosition(dmginfo:GetDamagePosition())
-	rubatPidor:SetDamageForce(dmginfo:GetDamageForce())
 
-	ply.LastDMGInfo = rubatPidor
+	ply.LastDMGInfo = dmginfo
 
-	dmginfo:ScaleDamage(0.5)
 	hook.Run("HomigradDamage",ply,hitgroup,dmginfo,rag,armorMul,armorDur,haveHelmet)
-	dmginfo:ScaleDamage(0.5)
+	if dmginfo:GetDamage() > 35 then
+		dmginfo:ScaleDamage(0.5)
+	else
+		dmginfo:ScaleDamage(0.8)
+	end
 	if rag then
 		if dmginfo:GetDamageType() == DMG_CRUSH then
-			dmginfo:ScaleDamage(1 / 40 / 15)
+			dmginfo:ScaleDamage(1 / 45 / 16)
 		end
 
 		ply:SetHealth(ply:Health() - dmginfo:GetDamage())

@@ -39,11 +39,11 @@ Vectors = {
 ["weapon_hk_usps"]=Vector(4,-1.2,2),
 ["weapon_glock"]=Vector(14,0,4),
 ["weapon_mp7"]=Vector(0,0,0),
-["weapon_remington870"]=Vector(-2,-1,0),
+["weapon_remington870"]=Vector(14,-1,3),
 ["weapon_xm1014"]=Vector(12,-1,4),
 ["bandage"]=Vector(0,0,0),
 ["weapon_taser"]=Vector(2,1.5,0),
-["weapon_sar2"]=Vector(16,-2,2),
+["weapon_sar2"]=Vector(16,0,2),
 ["weapon_civil_famas"]=Vector(-1,-1,-1),
 ["weapon_spas12"]=Vector(13,-1,2),
 }
@@ -90,7 +90,7 @@ function SpawnWeapon(ply,clip1)
 
 			ply.wep=ents.Create("wep")
 
-			ply.wep:SetModel(weapons.Get(ply.curweapon).WorldModel)
+			ply.wep:SetModel(weapons.Get(ply.curweapon).WorldModel or nil)
 
 			ply.wep:SetOwner(ply)
 
@@ -254,24 +254,22 @@ function Reload(wep)
 	if !IsValid(wep) then return nil end
 	if ShootWait[wep.curweapon]==nil then return nil end
 	local ply = wep:GetOwner()
-	if !timer.Exists("reload"..wep:EntIndex()) and wep.Clip!=wep.MaxClip and wep.Amt>0 then
-		wep:EmitSound( ReloadSound[wep.curweapon], 75, 100, 1 )
+	if !timer.Exists("reload"..wep:EntIndex()) and wep.Clip ~= wep.MaxClip and wep.Amt > 0 then
+		wep:EmitSound("weapons/ar2/ar2_reload.wav", 75, 100, 1)
 		timer.Create("reload"..wep:EntIndex(), weptable.ReloadTime, 1, function()
 			if IsValid(wep) then
 				local oldclip = wep.Clip
-				wep.Clip = math.Clamp(wep.Clip+wep.Amt,0,wep.MaxClip)
-				local needed = wep.Clip-oldclip
+				wep.Clip = math.Clamp(wep.Clip + wep.Amt, 0, wep.MaxClip)
+				local needed = wep.Clip - oldclip
 				wep.Amt=wep.Amt-needed
 				ply.Info.Ammo[wep.AmmoType]=wep.Amt
-
 				--print(ply.Info.Ammo[wep.AmmoType])
 			end
 		end)
 	end
 end
 
-NextShot=0
-
+NextShot = 0
 
 HMCD_SurfaceHardness={
     [MAT_METAL]=.95,[MAT_COMPUTER]=.95,[MAT_VENT]=.95,[MAT_GRATE]=.95,[MAT_FLESH]=.5,[MAT_ALIENFLESH]=.3,
@@ -279,10 +277,7 @@ HMCD_SurfaceHardness={
     [MAT_CONCRETE]=.9,[MAT_TILE]=.8,[MAT_SLOSH]=.05,[MAT_PLASTIC]=.3,[MAT_GLASS]=.6
 }
 
-
 local pos = Vector(0,0,0)
-
-
 
 function FireShot(wep)
 	if not IsValid(wep) then return end
@@ -417,7 +412,7 @@ function FireShot(wep)
 		net.WriteEntity(wep)
 		net.Broadcast()
 	end
-	if wep.curweapon!="weapon_ak74" then
+	if wep.curweapon~="weapon_ak74" then
 		wep:GetPhysicsObject():ApplyForceCenter(wep:GetAngles():Forward()*-damage*2+wep:GetAngles():Right()*VectorRand(-90,90)+wep:GetAngles():Up()*200)			--сделать зависимым от force потом
 	else
 		local ply = wep:GetOwner()
@@ -432,5 +427,4 @@ function FireShot(wep)
 	effectdata:SetAngles( shootAngles )
 	effectdata:SetScale( 1 )
 	util.Effect( "MuzzleEffect", effectdata )
-
 end

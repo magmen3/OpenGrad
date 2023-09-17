@@ -23,8 +23,8 @@ function SWEP:CanSecondaryAttack()
 	if not self.Secondary.Enabled then return false end
 	if self:GetSecondaryAmmoType() < 0 then return true end
 	if self.Secondary.ClipSize > 0 then
-		return self.Weapon:Clip2() >= self.Secondary.Cost
-	else return self.Owner:GetAmmoCount(self.Secondary.Ammo) >= self.Secondary.Cost end
+		return self:Clip2() >= self.Secondary.Cost
+	else return self:GetOwner():GetAmmoCount(self.Secondary.Ammo) >= self.Secondary.Cost end
 end
 function SWEP:TriedToSecondaryAttack()
 	self:EmitSound(self.Secondary.EmptySound)
@@ -43,10 +43,10 @@ function SWEP:SecondaryAttack()
 	self:EmitSound(self.Secondary.Sound)
 	if SERVER then
 		self:TakeSecondaryAmmo(self.Secondary.Cost)
-		if self.Owner:IsPlayer() then
-			local eyeangles = self.Owner:EyeAngles()
+		if self:GetOwner():IsPlayer() then
+			local eyeangles = self:GetOwner():EyeAngles()
 			eyeangles.p = eyeangles.p - self.Secondary.Recoil
-			self.Owner:SetEyeAngles(eyeangles)
+			self:GetOwner():SetEyeAngles(eyeangles)
 		end
 	end
 	if IsFirstTimePredicted() then

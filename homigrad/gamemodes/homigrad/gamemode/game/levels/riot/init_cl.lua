@@ -3,11 +3,12 @@ riot.GetTeamName = tdm.GetTeamName
 local playsound = false
 local bhop
 function riot.StartRoundCL()
-    sound.PlayURL("https://cdn.discordapp.com/attachments/1136982600829894656/1138472303294951544/challengecomplete_metal.wav","mono noblock",function(snd)
+    --[[sound.PlayURL("https://cdn.discordapp.com/attachments/1136982600829894656/1138472303294951544/challengecomplete_metal.wav","mono noblock",function(snd)
         bhop = snd
 
         snd:SetVolume(1)
-    end) 
+    end) ]]--
+	playsound = true
 end
 
 
@@ -18,6 +19,8 @@ function riot.HUDPaint_RoundLeft(white)
 	local startRound = roundTimeStart + 5 - CurTime()
     if startRound > 0 and lply:Alive() then
         if playsound then
+            playsound = false
+            surface.PlaySound("snd_jack_hmcd_disaster.mp3")
         end
         lply:ScreenFade(SCREENFADE.IN,Color(0,0,0,255),0.5,0.5)
 

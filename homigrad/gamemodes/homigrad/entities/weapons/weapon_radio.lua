@@ -43,7 +43,11 @@ SWEP.vbwPos = Vector(0.5,-44,-0.5)
 SWEP.vbwAng = Angle(-90,0,-90)
 SWEP.vbwModelScale = 1
 
-if SERVER then
+function SWEP:PrimaryAttack()
+	return false
+end
+
+if SERVER then -- ЕБАННЫЙ ДАУН
     homigrad_weapons = homigrad_weapons or {}
 
     function SWEP:Initialize()
@@ -141,18 +145,57 @@ if SERVER then
         end
     end)
 else
-    local white = Color(255,255,255)
     local hg_hint = CreateClientConVar("hg_hint","1",true,false)
-
     function SWEP:DrawHUD()
         if LocalPlayer():InVehicle() or not hg_hint:GetBool() then return end
 
-        draw.SimpleText("В голосовой","DebugFixedSmall",ScrW() / 2 - 200,ScrH() - 175,white)
-        draw.SimpleText("Зажми ПКМ и говори","DebugFixedSmall",ScrW() / 2 + 200,ScrH() - 175,white,TEXT_ALIGN_RIGHT)
-        draw.SimpleText("В чат","DebugFixedSmall",ScrW() / 2 - 200,ScrH() - 150,white)
-        draw.SimpleText("Просто пиши и держи в руках","DebugFixedSmall",ScrW() / 2 + 200,ScrH() - 150,white,TEXT_ALIGN_RIGHT)
-        draw.SimpleText("Сидя в машине нужно просто говорить","DebugFixedSmall",ScrW() / 2 ,ScrH() - 125,white,TEXT_ALIGN_CENTER)
+        draw.SimpleText("В голосовой","DebugFixedSmall",ScrW() / 2 - 200,ScrH() - 175,color_white)
+        draw.SimpleText("Зажми ПКМ и говори","DebugFixedSmall",ScrW() / 2 + 200,ScrH() - 175,color_white,TEXT_ALIGN_RIGHT)
+        draw.SimpleText("В чат","DebugFixedSmall",ScrW() / 2 - 200,ScrH() - 150,color_white)
+        draw.SimpleText("Просто пиши и держи в руках","DebugFixedSmall",ScrW() / 2 + 200,ScrH() - 150,color_white,TEXT_ALIGN_RIGHT)
+        draw.SimpleText("Сидя в машине нужно просто говорить","DebugFixedSmall",ScrW() / 2 ,ScrH() - 125,color_white,TEXT_ALIGN_CENTER)
 
-        draw.SimpleText("Убрать подсказки hg_hint 0","DebugFixedSmall",ScrW() / 2,ScrH() - 100,white,TEXT_ALIGN_CENTER)
+        draw.SimpleText("Убрать подсказки hg_hint 0","DebugFixedSmall",ScrW() / 2,ScrH() - 100,color_white,TEXT_ALIGN_CENTER)
+    end
+
+    local model = GDrawWorldModel or ClientsideModel(SWEP.WorldModel,RENDER_GROUP_OPAQUE_ENTITY)
+    GDrawWorldModel = model
+    model:SetNoDraw(true)
+
+    SWEP.dwmModeScale = 1.1
+    SWEP.dwmForward = 4.5
+    SWEP.dwmRight = -6
+    SWEP.dwmUp = 45
+
+    SWEP.dwmAUp = 0
+    SWEP.dwmARight = 180
+    SWEP.dwmAForward = 0
+    function SWEP:DrawWorldModel()
+        local owner = self:GetOwner()
+        if not IsValid(owner) then
+            self:DrawModel()
+
+            return
+        end
+
+        local Pos,Ang = owner:GetBonePosition(owner:LookupBone("ValveBiped.Bip01_R_Hand"))
+        if not Pos then return end
+
+        model:SetModel(self.WorldModel)
+
+        Pos:Add(Ang:Forward() * self.dwmForward)
+        Pos:Add(Ang:Right() * self.dwmRight)
+        Pos:Add(Ang:Up() * self.dwmUp)
+
+        model:SetPos(Pos)
+
+        Ang:RotateAroundAxis(Ang:Up(),self.dwmAUp)
+        Ang:RotateAroundAxis(Ang:Right(),self.dwmARight)
+        Ang:RotateAroundAxis(Ang:Forward(),self.dwmAForward)
+        model:SetAngles(Ang)
+
+        model:SetModelScale(1.1)
+
+        model:DrawModel()
     end
 end

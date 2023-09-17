@@ -1,9 +1,9 @@
 local t = {}
 local n, e, r, o
-local d = Material('materials/scopes/scope_dbm.png')
-CameraSetFOV = 120
+-- local d = Material('materials/scopes/scope_dbm.png')
+CameraSetFOV = 100
 
-CreateClientConVar("hg_fov","120",true,false,nil,90,120)
+CreateClientConVar("hg_fov","100",true,false,nil,90,120)
 local smooth_cam = CreateClientConVar("hg_smooth_cam","1",true,false,nil,0,1)
 
 CreateClientConVar("hg_bodycam","0",true,false,nil,0,1)
@@ -148,7 +148,6 @@ local view = {
 local render_Clear = render.Clear
 local render_RenderView = render.RenderView
 
-local white = Color(255,255,255)
 local HasFocus = system.HasFocus
 local oldFocus
 local text
@@ -156,11 +155,12 @@ local text
 local hg_disable_stoprenderunfocus = CreateClientConVar("hg_disable_stoprenderunfocus","0",true)
 
 local prekols = {
-	"Get a job",
-	"Get a life",
-	"возможно, команда hg_disable_stoprenderunfocus 1 выключит этот прикол...",
-	"ураааа, ты свернулся... Потрогай траву, играть вечность плохо.",
-	"kys"
+	"всем привет",
+	"ЖОПА",
+	"интересный факт, hg_disable_stoprenderunfocus 1 выключает эту херню",
+	"потрогай траву",
+	"рост 177 бобы боыыыыыыы",
+	"Чувак, ты думал что-то здесь будет? Ооооо нет, от тя воняет говном даже отсюда чувствую..."
 }
 
 local developer = GetConVar("developer")
@@ -185,7 +185,7 @@ hook.Add("RenderScene","octoweapons",function(pos,angle,fov)
 
 	if STOPRENDER then
 		cam.Start2D()
-			draw.SimpleText(text,"DebugFixedSmall",ScrW() / 2,ScrH() / 2,white,TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER)
+			draw.SimpleText(text,"DebugFixedSmall",ScrW() / 2,ScrH() / 2,color_white,TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER)
 		cam.End2D()
 
 		return true
@@ -262,16 +262,18 @@ local deathtexts = {
 	"WASTED",
 	"МЁРТВ",
 	"ПОМЕР",
-	"ТРУПАК",
 	"МЕРТВЕЦ",
 	"СДОХ",
-	"ТВОЯ ОСТОНОВКА",
+	"ТВОЯ ОСТАНОВКА",
 	"ВРЕМЯ ВЫШЛО",
 	"МИССИЯ ПРОВАЛЕНА",
 	"ВОТ И ВСЕ!",
 	"КОНЕЦ",
-	"FILINA?",
+	"КОНЦОВКА",
 	"DEAD",
+	"MISSION FAILED",
+	"МИССИЯ ПРОВАЛЕНА",
+	"PRESS R TO RESTART!",
 	"TRY AGAIN"
 }
 net.Receive("pophead",function(len)
@@ -566,8 +568,8 @@ CalcView = function(ply,vec,ang,fov,znear,zfar)
 		end
 		if weaponClass == "weapon_remington870" then
 			--Vector(3.8,4,0.65)
-			vecWep = hand.Pos + hand.Ang:Up() * 4.4 - hand.Ang:Forward() * 4 + hand.Ang:Right() * 1.20
-			angWep = hand.Ang + Angle(-1,0,0)
+			vecWep = hand.Pos + hand.Ang:Up() * 4.4 - hand.Ang:Forward() * 4 + hand.Ang:Right() / 1.6
+			angWep = hand.Ang + Angle(-5,0,0)
 		end
 		if weaponClass == "weapon_ar15" then
 			--Vector(5.05,7,0.725)
@@ -910,6 +912,20 @@ hook.Add("PostDrawOpaqueRenderables", "example", function()
 end )
 ]]--
 
+hook.Add("AdjustMouseSensitivity", "staminasensivity", function()
+	local ply = LocalPlayer()
+	if ply:GetMoveType(MOVETYPE_WALK) and ply:IsSprinting() and not IsValid(ply:GetNWEntity("Ragdoll")) then
+		return 0.3
+	end
+	local wep = ply:GetActiveWeapon()
+	wep = IsValid(wep) and wep
+	scope = IsValid(wep) and wep.IsScope and wep:IsScope() and not wep.isClose
+	if scope then
+		return 0.4
+	end
+	return 1
+end)
+
 hook.Add("Think","mouthanim",function()
 	for i, ply in pairs(player.GetAll()) do
 		local ent = IsValid(ply:GetNWEntity("Ragdoll")) and ply:GetNWEntity("Ragdoll") or ply
@@ -957,7 +973,6 @@ local tab2 = {
 	[ "$pp_colour_mulg" ] = 0,
 	[ "$pp_colour_mulb" ] = 0
 }
-
 
 local mat = Material("pp/texturize/plain.png")
 

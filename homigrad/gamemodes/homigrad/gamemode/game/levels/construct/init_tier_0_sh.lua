@@ -16,7 +16,7 @@ end
 
 if SERVER then return end
 
-function construct.CanUseSpawnMenu() return GetGlobalVar("Can",false) end
+function construct.CanUseSpawnMenu() return GetGlobalVar("Can", true) end
 
 local gray = Color(122,122,122,255)
 

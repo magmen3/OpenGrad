@@ -9,10 +9,10 @@ ENT.dir = 1
 ENT.targetVel = 400
 
 function ENT:Initialize()
-	self.Entity:SetModel(self.model)
-	self.Entity:PhysicsInit(SOLID_VPHYSICS)
-	self.Entity:SetMoveType(MOVETYPE_VPHYSICS)
-	self.Entity:SetSolid(SOLID_VPHYSICS)
+	self:SetModel(self.model)
+	self:PhysicsInit(SOLID_VPHYSICS)
+	self:SetMoveType(MOVETYPE_VPHYSICS)
+	self:SetSolid(SOLID_VPHYSICS)
 end
 
 

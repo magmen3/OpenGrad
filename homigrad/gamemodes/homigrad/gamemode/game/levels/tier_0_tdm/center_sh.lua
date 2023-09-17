@@ -20,7 +20,6 @@ tdm.SupportCenter = true
 
 hook.Add("HUDPaint","bahmut",function()
     local lply = LocalPlayer()
-    return end
     
     if not TableRound().SupportCenter then return end
     if not GetGlobalVar("Center") or not lply:Alive() then return end

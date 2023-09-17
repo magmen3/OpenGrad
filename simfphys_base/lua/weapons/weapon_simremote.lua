@@ -9,8 +9,8 @@ SWEP.UseHands			= true
 SWEP.ViewModelFlip		= false
 SWEP.ViewModelFOV		= 53
 SWEP.Weight 			= 42
-SWEP.AutoSwitchTo 		= true
-SWEP.AutoSwitchFrom 	= true
+SWEP.AutoSwitchTo 		= false
+SWEP.AutoSwitchFrom 	= false
 SWEP.HoldType			= "pistol"
 
 SWEP.Primary.ClipSize		= -1
@@ -64,7 +64,7 @@ if (CLIENT) then
 		
 		if not simfphys.IsCar( ent ) then return false end
 		
-		self.Weapon:EmitSound( "Weapon_Pistol.Empty" )
+		self:EmitSound( "Weapon_Pistol.Empty" )
 		
 		return true
 	end
@@ -72,7 +72,7 @@ if (CLIENT) then
 	function SWEP:SecondaryAttack()
 		if self:GetActive() then return false end
 		
-		self.Weapon:EmitSound( "Weapon_Pistol.Empty" )
+		self:EmitSound( "Weapon_Pistol.Empty" )
 		
 		return true
 	end
@@ -81,7 +81,7 @@ if (CLIENT) then
 end
 
 function SWEP:Initialize()
-	self.Weapon:SetHoldType( self.HoldType )
+	self:SetHoldType( self.HoldType )
 end
 
 function SWEP:OwnerChanged()
@@ -173,7 +173,7 @@ function SWEP:Disable()
 end
 
 function SWEP:Deploy()
-	self.Weapon:SendWeaponAnim( ACT_VM_DRAW )
+	self:SendWeaponAnim( ACT_VM_DRAW )
 	return true
 end
 

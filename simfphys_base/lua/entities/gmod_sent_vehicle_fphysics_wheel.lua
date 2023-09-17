@@ -55,7 +55,7 @@ if SERVER then
 			self.WheelDust:SetParent( self )
 			self.WheelDust.DoNotDuplicate = true
 
-			simfphys.SetOwner( self.EntityOwner, self.WheelDust )
+			simfphys.SetOwner( selfOwner, self.WheelDust )
 
 			if not istable( StormFox ) and not istable( StormFox2 ) then return end
 
@@ -70,7 +70,7 @@ if SERVER then
 			self.WheelSplash:SetParent( self )
 			self.WheelSplash.DoNotDuplicate = true
 
-			simfphys.SetOwner( self.EntityOwner, self.WheelSplash )
+			simfphys.SetOwner( selfOwner, self.WheelSplash )
 		end)
 		
 		self.snd_roll = "simulated_vehicles/sfx/concrete_roll.wav"

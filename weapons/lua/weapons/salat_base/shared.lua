@@ -38,9 +38,6 @@ SWEP.Sight = false
 SWEP.ReloadSound = ""
 SWEP.TwoHands = false
 
-
-
-
 SWEP.Secondary.ClipSize		= -1
 SWEP.Secondary.DefaultClip	= -1
 SWEP.Secondary.Automatic	= false
@@ -66,10 +63,8 @@ SWEP.vbwPos = false
 SWEP.vbwAng = false
 SWEP.Suppressed = false
 
-local hg_skins = CreateClientConVar("hg_skins","1",true,false,"ubrat govno",0,1)
+-- local hg_skins = CreateClientConVar("hg_skins","1",true,false,"ubrat govno",0,1)
 local hg_show_hitposmuzzle = CreateClientConVar("hg_show_hitposmuzzle","0",false,false,"huy",0,1)
-
-
 
 hook.Add("HUDPaint","admin_hitpos",function()
 	if hg_show_hitposmuzzle:GetBool() and LocalPlayer():IsAdmin() then
@@ -123,7 +118,7 @@ function SWEP:DrawHUD()
 
 	local ammomags = ply:GetAmmoCount( self:GetPrimaryAmmoType() )
 
-	if oldclip != ammobag then
+	if oldclip ~= ammobag then
 		randomx = math.random(0, 5)
 		randomy = math.random(0, 5)
 		timer.Simple(0.15, function()
@@ -134,7 +129,7 @@ function SWEP:DrawHUD()
 		randomy = 0
 	end
 
-	if oldmag != ammomags then
+	if oldmag ~= ammomags then
 		randomxmag = math.random(0, 5)
 		randomymag = math.random(0, 5)
 		timer.Simple(0.35, function()
@@ -163,12 +158,12 @@ end
 function SWEP:DrawWorldModel()
     self:DrawModel()
 	
-	if not hg_skins:GetBool() then return end
+	-- if not hg_skins:GetBool() then return end
 
-    if (IsValid(self:GetOwner()) and self:GetOwner():IsPlayer() and skins[self:GetOwner():GetUserGroup()]) then
-        self:SetSubMaterial( 0, self:GetNWString( "skin" ) )
+    --[[if (IsValid(self:GetOwner()) and self:GetOwner():IsPlayer() and skins[self:GetOwner():GetUserGroup()]) then
+        self:SetSubMaterial(0, self:GetNWString("skin"))
         self:DrawModel()
-    end
+    end]]--
 end
 
 HMCD_SurfaceHardness={
@@ -176,7 +171,6 @@ HMCD_SurfaceHardness={
     [MAT_SAND]=.1,[MAT_DIRT]=.3,[74]=.1,[85]=.2,[MAT_WOOD]=.5,[MAT_FOLIAGE]=.5,
     [MAT_CONCRETE]=.9,[MAT_TILE]=.8,[MAT_SLOSH]=.05,[MAT_PLASTIC]=.3,[MAT_GLASS]=.6
 }
-
 
 local pos = Vector(0,0,0)
 
@@ -210,7 +204,7 @@ function SWEP:RicochetOrPenetrate(initialTrace)
 		end
 		if(Penetrated)then
 			self:FireBullets({
-				Attacker=self.Owner,
+				Attacker=self:GetOwner(),
 				Damage=1,
 				Force=1,
 				Num=1,
@@ -221,7 +215,7 @@ function SWEP:RicochetOrPenetrate(initialTrace)
 				Src=SearchPos+AVec
 			})
 			self:FireBullets({
-				Attacker=self.Owner,
+				Attacker=self:GetOwner(),
 				Damage=self.Primary.Damage*.65,
 				Force=self.Primary.Damage/15,
 				Num=1,
@@ -238,7 +232,7 @@ function SWEP:RicochetOrPenetrate(initialTrace)
 		NewVec:RotateAroundAxis(TNorm,180)
 		NewVec=NewVec:Forward()
 		self:FireBullets({
-			Attacker=self.Owner,
+			Attacker=self:GetOwner(),
 			Damage=self.Primary.Damage*.85,
 			Force=self.Primary.Damage/15,
 			Num=1,
@@ -253,7 +247,7 @@ end
 
 homigrad_weapons = homigrad_weapons or {}
 
-local skini = {
+--[[local skini = {
 	"sal/acc/armor01_2",
 	"sal/acc/armor01_3",
 	"sal/acc/armor01_4",
@@ -261,14 +255,14 @@ local skini = {
 	"models/foodnhouseholditems/cj_b_plastic",
 	"models/jacky_camouflage/digi",
 	"models/jacky_camouflage/digi2"
-}
+}]]--
 
 function SWEP:Initialize()
 	homigrad_weapons[self] = true
 
-	if SERVER then
+	--[[if SERVER then
 		self:SetNWString( "skin", table.Random(skini) )
-	end
+	end]]--
 
 	self.lerpClose = 0
 end
@@ -312,7 +306,7 @@ function SWEP:PrimaryAttack()
 
 
 	local canfire = self:CanFireBullet()
-	--self.Owner:ChatPrint(tostring(canfire)..(CLIENT and " client" or " server"))
+	--self:GetOwner():ChatPrint(tostring(canfire)..(CLIENT and " client" or " server"))
 	if self:Clip1() <= 0 or not canfire and self.NextShot < CurTime() then
 		if SERVER then
 			sound.Play("snd_jack_hmcd_click.wav",self:GetPos(),65,100)
@@ -324,7 +318,7 @@ function SWEP:PrimaryAttack()
 
 	self:PrePrimaryAttack()
 
-	if self.isClose or not self.Owner:IsNPC() and self.Owner:IsSprinting() then return end
+	if self.isClose or not self:GetOwner():IsNPC() and self:GetOwner():IsSprinting() then return end
 
 	local ply = self:GetOwner() -- а ну да
 	self.NextShot = CurTime() + self.ShootWait
@@ -342,9 +336,9 @@ function SWEP:PrimaryAttack()
 
 		if self.Suppressed then Dist = 55 end
 
-		sound.Play(self.Primary.Sound,self.Owner:GetShootPos(),Dist,Pitch) --  надо звук а ну или так Я звуки с хомиса добавил, кетовскго, можно дальние оттуда взять
+		sound.Play(self.Primary.Sound,self:GetOwner():GetShootPos(),Dist,Pitch) --  надо звук а ну или так Я звуки с хомиса добавил, кетовскго, можно дальние оттуда взять
 
-		sound.Play(self.Primary.Sound,self.Owner:GetShootPos(),Dist * 5,Pitch / 2,1)
+		sound.Play(self.Primary.Sound,self:GetOwner():GetShootPos(),Dist * 5,Pitch / 2,1)
 	end
 	--]]
 	
@@ -353,7 +347,7 @@ function SWEP:PrimaryAttack()
 		net.WriteVector(self:GetPos())
 		net.WriteString(self.Primary.Sound)
 		net.WriteString(self.Primary.SoundFar)
-		net.WriteEntity(self.Owner)
+		net.WriteEntity(self:GetOwner())
 		net.Broadcast()
 	else
 		self:EmitSound(self.Primary.Sound,511,math.random(100,120),1,CHAN_VOICE_BASE,0,0)
@@ -376,8 +370,8 @@ function SWEP:PrimaryAttack()
 		self.ZazhimYaycami = math.min(self.ZazhimYaycami + 2,self.Primary.ClipSize)
 	end
 	
-	if CLIENT and (self.Owner != LocalPlayer()) then
-		self.Owner:SetAnimation(PLAYER_ATTACK1)
+	if CLIENT and (self:GetOwner() ~= LocalPlayer()) then
+		self:GetOwner():SetAnimation(PLAYER_ATTACK1)
 	end
 	
 	self.lastShoot = CurTime()
@@ -399,16 +393,16 @@ function SWEP:Reload()
 	if !self:GetOwner():KeyDown(IN_WALK) then
 		self.AmmoChek = 3
 		if timer.Exists("reload"..self:EntIndex())  or self:Clip1()>=self:GetMaxClip1() or self:GetOwner():GetAmmoCount( self:GetPrimaryAmmoType() )<=0 then return nil end
-		if self.Owner:IsSprinting() then return nil end
+		if self:GetOwner():IsSprinting() then return nil end
 		if ( self.NextShot > CurTime() ) then return end
 		self:GetOwner():SetAnimation(PLAYER_RELOAD)
 		self:EmitSound(self.ReloadSound,60,100,0.8,CHAN_AUTO)
 		timer.Create( "reload"..self:EntIndex(), self.ReloadTime, 1, function()
-			if IsValid(self) and IsValid(self.Owner) and self.Owner:GetActiveWeapon()==self then
+			if IsValid(self) and IsValid(self:GetOwner()) and self:GetOwner():GetActiveWeapon()==self then
 				local oldclip = self:Clip1()
 				self:SetClip1(math.Clamp(self:Clip1()+self:GetOwner():GetAmmoCount( self:GetPrimaryAmmoType() ),0,self:GetMaxClip1()))
 				local needed = self:Clip1()-oldclip
-				self.Owner:SetAmmo(self:GetOwner():GetAmmoCount( self:GetPrimaryAmmoType() )-needed, self:GetPrimaryAmmoType())
+				self:GetOwner():SetAmmo(self:GetOwner():GetAmmoCount( self:GetPrimaryAmmoType() )-needed, self:GetPrimaryAmmoType())
 				self.AmmoChek = 5
 			end
 		end)
@@ -445,7 +439,7 @@ function SWEP:FireBullet(dmg, numbul, spread)
 	ply:LagCompensation(true)
 
 	local obj = self:LookupAttachment("muzzle")
-	local Attachment = self.Owner:GetActiveWeapon():GetAttachment(obj)
+	local Attachment = self:GetOwner():GetActiveWeapon():GetAttachment(obj)
 
 	local cone = self.Primary.Cone
 
@@ -472,10 +466,10 @@ function SWEP:FireBullet(dmg, numbul, spread)
 	bullet.Force		= self.Primary.Force / 40
 	bullet.Damage		= self.Primary.Damage * 4
 	bullet.AmmoType     = self.Primary.Ammo
-	bullet.Attacker 	= self.Owner
+	bullet.Attacker 	= self:GetOwner()
 	bullet.Tracer       = 1
 	bullet.TracerName   = self.Tracer or "Tracer"
-	bullet.IgnoreEntity = not self.Owner:IsNPC() and self.Owner:GetVehicle() or self.Owner
+	bullet.IgnoreEntity = not self:GetOwner():IsNPC() and self:GetOwner():GetVehicle() or self:GetOwner()
 
 	bullet.Callback = function(ply,tr,dmgInfo)
 		ply:GetActiveWeapon():BulletCallbackFunc(self.Primary.Damage,ply,tr,self.Primary.Damage,false,true,false)
@@ -531,7 +525,7 @@ function SWEP:FireBullet(dmg, numbul, spread)
 		if SERVER then
 			ply.KillReason = "killyourself"
 
-			--self.Owner:FireBullets(bullet)
+			--self:GetOwner():FireBullets(bullet)
 			local dmgInfo = DamageInfo()
 			dmgInfo:SetAttacker(ply)
 			dmgInfo:SetInflictor(self)
@@ -546,9 +540,9 @@ function SWEP:FireBullet(dmg, numbul, spread)
 			
 			--if ply:Alive() then ply:Kill() end
 		end
-	elseif not self.Owner:IsNPC() then
+	elseif not self:GetOwner():IsNPC() then
 		if SERVER then
-			self.Owner:FireBullets(bullet)
+			self:GetOwner():FireBullets(bullet)
 		end
 		self:SetLastShootTime()
 	else
@@ -566,7 +560,7 @@ function SWEP:FireBullet(dmg, numbul, spread)
 	effectdata:SetNormal(shootDir)
 	util.Effect(self.Efect or "MuzzleEffect",effectdata)
 
-	if self.Owner:IsNPC() then
+	if self:GetOwner():IsNPC() then
 		self:SendWeaponAnim(ACT_VM_PRIMARYATTACK)
 	end
 end
@@ -797,7 +791,7 @@ function SWEP:SecondaryAttack() return end
 function SWEP:Deploy()
 	self:SetHoldType("normal")
 	if SERVER then
-		self.Owner:EmitSound("snd_jack_hmcd_pistoldraw.wav", 65,(self.TwoHands and 100) or (!self.TwoHands and 110), 1, CHAN_AUTO)
+		self:GetOwner():EmitSound("snd_jack_hmcd_pistoldraw.wav", 65,(self.TwoHands and 100) or (!self.TwoHands and 110), 1, CHAN_AUTO)
 	end
 
 	self.NextShot = CurTime() + 0.5

@@ -40,7 +40,7 @@ function ENT:addRotors()
 	self.rotor:SetModel("models/props_junk/sawblade001a.mdl")
 	self.rotor:SetPos(self:LocalToWorld(self.rotorPos))
 	self.rotor:SetAngles(self:GetAngles() + Angle(90, 0, 0))
-	self.rotor:SetOwner(self.Owner)
+	self.rotor:SetOwner(self:GetOwner())
 	self.rotor:Spawn()
 	self.rotor:SetNotSolid(true)
 	self.rotor.phys = self.rotor:GetPhysicsObject()
@@ -71,13 +71,13 @@ function ENT:addRotors()
 					local dmg=(rotorVel*rotorVel + ph:GetVelocity():Length()*ph:GetVelocity():Length())/100000
 					ph:AddVelocity((e:GetPos()-self.rotor:GetPos())*dmg/e:GetPhysicsObject():GetMass()*10)
 					self:DamageBigRotor(dmg)
-					e:TakeDamage(dmg, IsValid(self.passengers[1]) and self.passengers[1] or self.Entity, self.Entity)
+					e:TakeDamage(dmg, IsValid(self.passengers[1]) and self.passengers[1] or self, self)
 				end
 			end
 		end
 		
 		e:Spawn()
-		e:SetOwner(self.Owner)
+		e:SetOwner(self:GetOwner())
 		e:SetParent(self.rotor)
 		e.wac_ignore = true
 		local obb=e:OBBMaxs()
@@ -86,7 +86,7 @@ function ENT:addRotors()
 		self.rotorModel=e
 		self:AddOnRemove(e)
 	end
-	constraint.Axis(self.Entity, self.rotor, 0, 0, self.rotorPos, Vector(0,0,1), 0,0,0.01,1)
+	constraint.Axis(self, self.rotor, 0, 0, self.rotorPos, Vector(0,0,1), 0,0,0.01,1)
 	self:AddOnRemove(self.rotor)
 	
 end

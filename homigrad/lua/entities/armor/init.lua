@@ -5,9 +5,9 @@ include("shared.lua")
 
 function ENT:Initialize()
 
-	self.Entity:SetModel("models/combine_vests/bluevest.mdl")
-	self.Entity:SetMaterial("models/mat_jack_hmcd_armor")
-	self.Entity:SetColor(Color(70,120,60))
+	self:SetModel("models/combine_vests/bluevest.mdl")
+	self:SetMaterial("models/mat_jack_hmcd_armor")
+	self:SetColor(Color(70,120,60))
 	self:PhysicsInit( SOLID_VPHYSICS )
 	self:SetMoveType( MOVETYPE_VPHYSICS )
 	self:SetSolid( SOLID_VPHYSICS )

@@ -1,4 +1,4 @@
-
+-- вырезать
 surface.CreateFont("HomigradFont",{
 	font = "Roboto",
 	size = 18,
@@ -12,7 +12,6 @@ surface.CreateFont("HomigradFontBig",{
 	weight = 1100,
 	outline = false
 })
-
 
 surface.CreateFont("HomigradFontLarge",{
 	font = "Roboto",

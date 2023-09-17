@@ -1,3 +1,4 @@
+-- food_spongebob_home :skull:
 SWEP.Base = 'weapon_base'
 AddCSLuaFile()
 
@@ -25,10 +26,7 @@ SWEP.Secondary.DefaultClip = -1
 SWEP.Secondary.Automatic = false
 SWEP.Secondary.Ammo = "none"
 
-
 SWEP.DrawCrosshair = false
-
-
 
 local healsound = Sound("snd_jack_hmcd_eat"..math.random(1,4)..".wav")
 function SWEP:Initialize()
@@ -81,13 +79,13 @@ if(CLIENT)then
 	end
 end
 function SWEP:PrimaryAttack()
-	self.Owner:SetAnimation(PLAYER_ATTACK1)
+	self:GetOwner():SetAnimation(PLAYER_ATTACK1)
 
 	if(SERVER)then
-		self.Owner.hungryregen = self.Owner.hungryregen + 1
+		self:GetOwner().hungryregen = self:GetOwner().hungryregen + 1
 		self:Remove()
 		sound.Play(healsound, self:GetPos(),75,100,0.5)
-		self.Owner:SelectWeapon("weapon_hands")
+		self:GetOwner():SelectWeapon("weapon_hands")
 	end
 end
 

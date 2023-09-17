@@ -47,11 +47,8 @@ local namecolor = {
    default = COLOR_WHITE,
    superadmin = Color(212,175,55),
    admin = Color(0,191,255),
-   veteran = Color(255,20,147),
+   operator = Color(255,20,147),
    moderator = Color(124,252,0),
-   supporter = Color(124,252,0),
-   servertreuer = Color(178,34,34),
-   nutzer = Color(65,105,225),
    user = Color(230,230,250)
 };
 
@@ -63,8 +60,8 @@ SolidMapVote[ 'Config' ][ 'Avatar Border Color' ] = function( ply )
 	return HSVToColor( math.sin( 0.3*RealTime() )*128 + 127, 1, 1 )
   end
 
-  if ply:IsUserGroup("servertreuer") then
-	return namecolor.servertreuer
+  if ply:IsUserGroup("operator") then
+	return namecolor.operator
   end
     -- This is the default color
     return color_white
@@ -168,7 +165,7 @@ SolidMapVote[ 'Config' ][ 'Random Mode' ] = 2
 SolidMapVote[ 'Config' ][ 'Random Image' ] = 'http://i.imgur.com/oqeqWhl.png'
 
 -- This is the image for maps that are missing an image
-SolidMapVote[ 'Config' ][ 'Missing Image' ] = ''
+SolidMapVote[ 'Config' ][ 'Missing Image' ] = 'vgui/wep_jack_hmcd_poisoncanister'
 SolidMapVote[ 'Config' ][ 'Missing Image Size' ] = { width = 1920, height = 1080 }
 
 -- In this table you can add information for the map to make it more

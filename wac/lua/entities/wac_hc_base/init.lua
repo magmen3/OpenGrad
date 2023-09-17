@@ -96,10 +96,10 @@ ENT.Weapons = {}
 
 function ENT:Initialize()
 	wac.aircraft.initialize()
-	self.Entity:SetModel(self.Model)
-	self.Entity:PhysicsInit(SOLID_VPHYSICS)
-	self.Entity:SetMoveType(MOVETYPE_VPHYSICS)
-	self.Entity:SetSolid(SOLID_VPHYSICS)
+	self:SetModel(self.Model)
+	self:PhysicsInit(SOLID_VPHYSICS)
+	self:SetMoveType(MOVETYPE_VPHYSICS)
+	self:SetSolid(SOLID_VPHYSICS)
 	self.phys = self:GetPhysicsObject()
 	if self.phys:IsValid() then
 		self.phys:SetMass(self.Weight)
@@ -147,7 +147,7 @@ function ENT:addEntity(name)
 	local e = ents.Create(name)
 	if not IsValid(e) then return nil end
 	table.insert(self.entities, e)
-	e.Owner = self.Owner
+	e.Owner = self:GetOwner()
 	e:SetNWString("Owner", "World")
 	return e
 end
@@ -168,7 +168,7 @@ function ENT:addNpcTargets()
 				local tr = util.TraceLine(traceData)
 				local e = self:addEntity("npc_bullseye")
 				e:SetPos(tr.HitPos + tr.HitNormal * 10)
-				e:SetParent(self.Entity)
+				e:SetParent(self)
 				e:SetKeyValue("health", "10000")
 				e:SetKeyValue("spawnflags", "256")
 				e:SetNotSolid(true)
@@ -193,7 +193,7 @@ function ENT:addRotors()
 		self.topRotor:SetModel("models/props_junk/sawblade001a.mdl")
 		self.topRotor:SetPos(self:LocalToWorld(self.TopRotor.pos))
 		self.topRotor:SetAngles(self:LocalToWorldAngles(self.TopRotor.angles))
-		self.topRotor:SetOwner(self.Owner)
+		self.topRotor:SetOwner(self:GetOwner())
 		self.topRotor:SetNotSolid(true)
 		self.topRotor:Spawn()
 		self.topRotor.Phys = self.topRotor:GetPhysicsObject()
@@ -233,7 +233,7 @@ function ENT:addRotors()
 						ph:AddVelocity((pos-self.topRotor:GetPos())*dmg/mass)
 						self.phys:AddVelocity((self.topRotor:GetPos() - pos)*dmg/mass)
 						self:DamageBigRotor(dmg)
-						e.Entity:TakeDamage(dmg, IsValid(self.passengers[1]) and self.passengers[1] or self.Entity, self.Entity)
+						e.Entity:TakeDamage(dmg, IsValid(self.passengers[1]) and self.passengers[1] or self, self)
 					end
 				end
 			end
@@ -249,11 +249,11 @@ function ENT:addRotors()
 		end
 		self.backRotor = self:addBackRotor()
 		self:SetNWEntity("rotor_rear", self.backRotor)
-		constraint.Axis(self.Entity, self.topRotor, 0, 0, self.TopRotor.pos, Vector(0,0,1), 0,0,0,1)
+		constraint.Axis(self, self.topRotor, 0, 0, self.TopRotor.pos, Vector(0,0,1), 0,0,0,1)
 		if self.TwinBladed then
-			constraint.Axis(self.Entity, self.backRotor, 0, 0, self.BackRotor.pos, Vector(0,0,1),0,0,0,1)
+			constraint.Axis(self, self.backRotor, 0, 0, self.BackRotor.pos, Vector(0,0,1),0,0,0,1)
 		else
-			constraint.Axis(self.Entity, self.backRotor, 0, 0, self.BackRotor.pos, Vector(0, 1, 0), 0,0,0,1)
+			constraint.Axis(self, self.backRotor, 0, 0, self.BackRotor.pos, Vector(0, 1, 0), 0,0,0,1)
 		end
 		self:AddOnRemove(self.topRotor)
 		self:AddOnRemove(self.backRotor)
@@ -266,7 +266,7 @@ function ENT:addBackRotor()
 	e:SetModel(self.BackRotor.model)
 	e:SetAngles(self:LocalToWorldAngles(self.BackRotor.angles))
 	e:SetPos(self:LocalToWorld(self.BackRotor.pos))
-	e.Owner = self.Owner
+	e.Owner = self:GetOwner()
 	e:SetNWFloat("rotorhealth", 100)
 	e.wac_ignore = true
 	e.TouchFunc = function(touchedEnt, pos) -- not colliding with world
@@ -614,8 +614,8 @@ function ENT:Think()
 				if self.rotorRpm > 0.6 then
 					if !self.RotorWash then
 						self.RotorWash = ents.Create("env_rotorwash_emitter")
-						self.RotorWash:SetPos(self.Entity:GetPos())
-						self.RotorWash:SetParent(self.Entity)
+						self.RotorWash:SetPos(self:GetPos())
+						self.RotorWash:SetParent(self)
 						self.RotorWash:Activate()
 					end
 				else
@@ -919,11 +919,11 @@ function ENT:PhysicsCollide(cdat, phys)
 		if !dmg or dmg < 1 then return end
 		self:TakeDamage(dmg*15)
 		if dmg > 2 then
-			self.Entity:EmitSound("vehicles/v8/vehicle_impact_heavy"..math.random(1,4)..".wav")
-			local lasta=(self.LastDamageTaken<CurTime()+6 and self.LastAttacker or self.Entity)
+			self:EmitSound("vehicles/v8/vehicle_impact_heavy"..math.random(1,4)..".wav")
+			local lasta=(self.LastDamageTaken<CurTime()+6 and self.LastAttacker or self)
 			for k, p in pairs(self.passengers) do
 				if p and p:IsValid() then
-					p:TakeDamage(dmg/5, lasta, self.Entity)
+					p:TakeDamage(dmg/5, lasta, self)
 				end
 			end
 		end
@@ -975,7 +975,7 @@ function ENT:DamageBigRotor(amt)
 		return
 	end
 	if amt < 1 then return end
-	self.Entity:EmitSound("physics/metal/metal_box_impact_bullet"..math.random(1,3)..".wav", math.Clamp(amt*40,0,100))
+	self:EmitSound("physics/metal/metal_box_impact_bullet"..math.random(1,3)..".wav", math.Clamp(amt*40,0,100))
 	if self.topRotor and self.topRotor:IsValid() then
 		self.topRotor.fHealth = self.topRotor.fHealth - amt
 		self.topRotor.Phys:AddAngleVelocity((self.topRotor.Phys:GetAngleVelocity()*-amt)*0.001)
@@ -1077,7 +1077,7 @@ function ENT:DamageEngine(amt)
 				local fire = ents.Create("env_fire_trail")
 				fire:SetPos(self:LocalToWorld(self.FirePos))
 				fire:Spawn()
-				fire:SetParent(self.Entity)
+				fire:SetParent(self)
 				self.Burning = true
 				self.sounds.LowHealth:Play()
 				self.EngineFire = fire
@@ -1087,10 +1087,10 @@ function ENT:DamageEngine(amt)
 				self.disabled = true
 				self.engineRpm = 0
 				self.rotorRpm = 0
-				local lasta=(self.LastDamageTaken<CurTime()+6 and self.LastAttacker or self.Entity)
+				local lasta=(self.LastDamageTaken<CurTime()+6 and self.LastAttacker or self)
 				for k, p in pairs(self.passengers) do
 					if p and p:IsValid() then
-						p:TakeDamage(p:Health() + 20, lasta, self.Entity)
+						p:TakeDamage(p:Health() + 20, lasta, self)
 					end
 				end
 
@@ -1115,13 +1115,13 @@ function ENT:DamageEngine(amt)
 					self.Aerodynamics.Rail = Vector(0.5, 0.5, 0.5)
 				]]
 				local effectdata = EffectData()
-				effectdata:SetStart(self.Entity:GetPos())
-				effectdata:SetOrigin(self.Entity:GetPos())
+				effectdata:SetStart(self:GetPos())
+				effectdata:SetOrigin(self:GetPos())
 				effectdata:SetScale(1)
 				util.Effect("Explosion", effectdata)
 				util.Effect("HelicopterMegaBomb", effectdata)
 				util.Effect("cball_explode", effectdata)
-				util.BlastDamage(self.Entity, self.Entity, self.Entity:GetPos(), 300, 300)
+				util.BlastDamage(self, self, self:GetPos(), 300, 300)
 				self:setEngine(false)
 				if self.Smoke then
 					self.Smoke:Remove()
@@ -1162,7 +1162,7 @@ function ENT:CreateSmoke()
 	smoke:SetKeyValue("JetLength", "50")
 	smoke:SetKeyValue("twist", "5")
 	smoke:Spawn()
-	smoke:SetParent(self.Entity)
+	smoke:SetParent(self)
 	smoke:Activate()
 	return smoke
 end

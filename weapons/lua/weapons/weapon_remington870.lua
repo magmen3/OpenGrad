@@ -47,8 +47,8 @@ SWEP.SlotPos				= 0
 SWEP.DrawAmmo				= true
 SWEP.DrawCrosshair			= false
 
-SWEP.ViewModel				= "models/bydistac/weapons/w_shot_m3juper90.mdl"
-SWEP.WorldModel				= "models/bydistac/weapons/w_shot_m3juper90.mdl"
+SWEP.ViewModel				= "models/pwb/weapons/w_remington_870.mdl"
+SWEP.WorldModel				= "models/pwb/weapons/w_remington_870.mdl"
 
 function SWEP:ApplyEyeSpray()
     self.eyeSpray = self.eyeSpray - Angle(5,math.Rand(-2,2),0)

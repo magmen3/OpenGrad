@@ -59,7 +59,7 @@ function CLASS:On()
 
 	local color = CLASS.color
 
-	self:SetModel(CLASS.models[math.random(#CLASS.models)])
+	self:SetModel(CLASS.models[math.random(#CLASS.models)] or "models/player/group01/male_03.mdl")
 	self:SetPlayerColor(color:ToVector())
 
 	self:Give("weapon_hands")

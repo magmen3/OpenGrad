@@ -14,25 +14,13 @@ function construct.StartRoundSV()
         ply:Spawn()
     end
 
-    wait = CurTime() + 50
-
     SetGlobalBool("Can",true)
 
-    return {wait}
+    return
 end
 
 function construct.RoundEndCheck()
     local alive = 0
-
-    if wait and wait < CurTime() then
-        wait = nil
-
-        SetGlobalBool("Can",false)
-
-        for i,ply in pairs(team.GetPlayers(1)) do
-            ply:StripWeapons()
-        end
-    end
 
     for i,ply in pairs(team.GetPlayers(1)) do
         if ply:Alive() then alive = alive + 1 end
@@ -46,7 +34,8 @@ function construct.EndRound()
 end
 
 function construct.PlayerSpawn(ply)
-    --ply:Give("weapon_physgun")
+	ply:Give("weapon_hands")
+    ply:Give("weapon_physgun")
     ply:Give("gmod_tool")
 end
 
@@ -57,13 +46,13 @@ function construct.PlayerCanJoinTeam(ply,teamID)
 end
 
 function construct.ShouldFakePhysgun(ply,ent) return false end
-
+--[[]
 local validTypes = {
     prop = true
 }
-
+]]--
 function construct.CanUseSpawnMenu(ply,class)
-    if not validTypes[class] then return false end
+	-- if not validTypes[class] then return false end
 
-    return GetGlobalVar("Can",false)
+    return GetGlobalVar("Can", true)
 end

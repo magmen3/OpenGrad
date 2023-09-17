@@ -70,7 +70,7 @@ function EFFECT:Init(data)
 	end
 	sound.Play(sounds[mats[self.Mat][1]][math.random(#sounds[mats[self.Mat][1]])], self.vOffset, 450, 100)
 	self.emitter:Finish()
- 	self.Entity:SetPos(self.vOffset)
+ 	self:SetPos(self.vOffset)
 end
  
  function EFFECT:Normal()

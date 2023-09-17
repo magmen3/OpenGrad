@@ -129,8 +129,8 @@ function tdm.StartRoundSV()
 
 	tdm.CenterInit()
 
-    bahmut.SelectRandomPlayers(team.GetPlayers(1),2,bahmut.GiveAidPhone)
-    bahmut.SelectRandomPlayers(team.GetPlayers(2),2,bahmut.GiveAidPhone)
+    --tdm.SelectRandomPlayers(team.GetPlayers(1),2,tdm.GiveAidPhone)
+    --tdm.SelectRandomPlayers(team.GetPlayers(2),2,tdm.GiveAidPhone)
 end
 
 function tdm.GetCountLive(list,func)
@@ -185,7 +185,7 @@ end
 function tdm.PlayerSpawn(ply,teamID)
 	local teamTbl = tdm[tdm.teamEncoder[teamID]]
 	local color = teamTbl[2]
-	ply:SetModel(teamTbl.models[math.random(#teamTbl.models)])
+	ply:SetModel(teamTbl.models[math.random(#teamTbl.models)] or "models/player/group01/male_03.mdl")
     ply:SetPlayerColor(color:ToVector())
 
 	for i,weapon in pairs(teamTbl.weapons) do ply:Give(weapon) end

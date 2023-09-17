@@ -5,11 +5,11 @@ include("shared.lua")
 
 function ENT:Initialize()
 	math.randomseed(CurTime())
-	self.Entity:SetModel("models/weltensturm/wac/rockets/rocket01.mdl")
-	self.Entity:PhysicsInit(SOLID_VPHYSICS)
-	self.Entity:SetMoveType(MOVETYPE_VPHYSICS)
-	self.Entity:SetSolid(SOLID_VPHYSICS)
-	self.phys = self.Entity:GetPhysicsObject()
+	self:SetModel("models/weltensturm/wac/rockets/rocket01.mdl")
+	self:PhysicsInit(SOLID_VPHYSICS)
+	self:SetMoveType(MOVETYPE_VPHYSICS)
+	self:SetSolid(SOLID_VPHYSICS)
+	self.phys = self:GetPhysicsObject()
 	if (self.phys:IsValid()) then
 		self.phys:SetMass(400)
 		self.phys:EnableGravity(false)
@@ -17,7 +17,7 @@ function ENT:Initialize()
 		self.phys:EnableDrag(false)
 		self.phys:Wake()
 	end
-	self.sound = CreateSound(self.Entity, "WAC/rocket_idle.wav")
+	self.sound = CreateSound(self, "WAC/rocket_idle.wav")
 	self.matType = MAT_DIRT
 	self.hitAngle = Angle(270, 0, 0)
 end
@@ -62,7 +62,7 @@ function ENT:Explode(tr)
 
 	local pos = tr and tr.HitPos or self.OldPos
 
-	util.BlastDamage(self, self.Owner or self, pos, self.Radius, self.Damage)
+	util.BlastDamage(self, self:GetOwner() or self, pos, self.Radius, self.Damage)
 
 	local explode = ents.Create("env_physexplosion")
 	explode:SetPos(pos)
@@ -74,7 +74,7 @@ function ENT:Explode(tr)
 
 	if tr then
 		local ed = EffectData()
-		ed:SetEntity(self.Entity)
+		ed:SetEntity(self)
 		ed:SetOrigin(self:GetPos())
 		ed:SetScale(self.Scale or 10)
 		ed:SetRadius(self.matType)
@@ -121,15 +121,14 @@ function ENT:OnRemove()
 end
 
 function ENT:StartRocket()
-	if self.Started then return end	
-	self.Owner = self.Owner or self.Entity
+	if self.Started then return end
 	self.Fuel=self.Fuel or 1000
 	self.Started = true
 	local pos = self:GetPos()
 	local ang = self:GetAngles()
 	--[[self.SmokeTrail=ents.Create("env_rockettrail")
 	self.SmokeTrail:SetPos(self:GetPos())
-	self.SmokeTrail:SetParent(self.Entity)
+	self.SmokeTrail:SetParent(self)
 	self.SmokeTrail:SetLocalAngles(Vector(0,0,0))
 	self.SmokeTrail:Spawn()]]
 	local ed=EffectData()
@@ -137,10 +136,10 @@ function ENT:StartRocket()
 	ed:SetScale(1)
 	ed:SetRadius(self.TrailLength)
 	ed:SetMagnitude(self.SmokeDens)
-	ed:SetEntity(self.Entity)
+	ed:SetEntity(self)
 	util.Effect("wac_rocket_trail", ed)
 	local light = ents.Create("env_sprite")
-	light:SetPos(self.Entity:GetPos())
+	light:SetPos(self:GetPos())
 	light:SetKeyValue("renderfx", "0")
 	light:SetKeyValue("rendermode", "5")
 	light:SetKeyValue("renderamt", "255")
@@ -150,7 +149,7 @@ function ENT:StartRocket()
 	light:SetKeyValue("scale", "0.4")
 	light:SetKeyValue("GlowProxySize", "50")
 	light:Spawn()
-	light:SetParent(self.Entity)
+	light:SetParent(self)
 	self.sound:Play()
 	self.OldPos=self:GetPos()
 	self.phys:EnableCollisions(false)
@@ -170,7 +169,7 @@ function ENT:PhysicsUpdate(ph)
 	local trd = {
 		start = self.OldPos,
 		endpos = self:GetPos(),
-		filter = {self,self.Owner,self.Launcher},
+		filter = {self,self:GetOwner(),self.Launcher},
 		mask = CONTENTS_SOLID + CONTENTS_MOVEABLE + CONTENTS_OPAQUE + CONTENTS_DEBRIS + CONTENTS_HITBOX + CONTENTS_MONSTER + CONTENTS_WINDOW + CONTENTS_WATER,
 	}
 

@@ -110,7 +110,7 @@ else
     function SWEP:DrawWorldModel()
         self:SetWeaponHoldType("normal")
 
-        local owner = self.Owner
+        local owner = self:GetOwner()
         if not IsValid(owner) then self:DrawModel() return end
 
         local mdl = self.worldModel
@@ -123,7 +123,7 @@ else
         end
         self:CallOnRemove("huyhuy",function() mdl:Remove() end)
 
-        local matrix = self.Owner:GetBoneMatrix(11)
+        local matrix = self:GetOwner():GetBoneMatrix(11)
         if not matrix then return end
 
         mdl:SetRenderOrigin(matrix:GetTranslation())
@@ -164,25 +164,23 @@ else
         model2:SetColor(hit and green or red)
     end
 
-    local white = Color(255,255,255)
-
     local hg_hint = CreateClientConVar("hg_hint","1",true,false)
 
     function SWEP:DrawHUD()
         local ent = scripted_ents.Get(self:GetNWString("Gred"))
         if not ent then
-            draw.SimpleText("wait??","DebugFixedSmall",ScrW() / 2,ScrH() - 175,white,TEXT_ALIGN_CENTER)
+            draw.SimpleText("wait??","DebugFixedSmall",ScrW() / 2,ScrH() - 175,color_white,TEXT_ALIGN_CENTER)
 
             return
         end
 
-        draw.SimpleText(ent.PrintName,"ChatFont",ScrW() / 2,ScrH() - 175,white,TEXT_ALIGN_CENTER)
+        draw.SimpleText(ent.PrintName,"ChatFont",ScrW() / 2,ScrH() - 175,color_white,TEXT_ALIGN_CENTER)
 
         if not hg_hint:GetBool() then return end
 
-        draw.SimpleText("Обращай внимания на калибр, выбирай 'HE'","DebugFixedSmall",ScrW() / 2,ScrH() - 150,white,TEXT_ALIGN_CENTER)
-        draw.SimpleText("Что-бы забрать зажми 'ALT' и нажми 'E'","DebugFixedSmall",ScrW() / 2,ScrH() - 125,white,TEXT_ALIGN_CENTER)
-        draw.SimpleText("Убрать подсказки hg_hint 0","DebugFixedSmall",ScrW() / 2,ScrH() - 100,white,TEXT_ALIGN_CENTER)
+        draw.SimpleText("Обращай внимания на калибр, выбирай 'HE'","DebugFixedSmall",ScrW() / 2,ScrH() - 150,color_white,TEXT_ALIGN_CENTER)
+        draw.SimpleText("Что-бы забрать зажми 'ALT' и нажми 'E'","DebugFixedSmall",ScrW() / 2,ScrH() - 125,color_white,TEXT_ALIGN_CENTER)
+        draw.SimpleText("Убрать подсказки hg_hint 0","DebugFixedSmall",ScrW() / 2,ScrH() - 100,color_white,TEXT_ALIGN_CENTER)
     end
 
     function SWEP:Holster()

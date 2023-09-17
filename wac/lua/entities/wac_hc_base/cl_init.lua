@@ -335,7 +335,7 @@ function ENT:viewCalcThirdPerson(k, p, view)
 	local tr = util.QuickTrace(
 			origin,
 			ang:Forward()*-self.thirdPerson.distance,
-			{self.Entity, self:GetNWEntity("wac_air_rotor_rear"), self:GetNWEntity("wac_air_rotor_main")}
+			{self, self:GetNWEntity("wac_air_rotor_rear"), self:GetNWEntity("wac_air_rotor_main")}
 	)
 	self.viewTarget = {
 		origin = (tr.HitPos - tr.Normal*10) - view.origin,
@@ -510,7 +510,7 @@ function ENT:DrawPilotHud()
 		surface.DrawText("HVR")
 	end
 	
-	local tr=util.QuickTrace(pos,Vector(0,0,-999999),self.Entity)
+	local tr=util.QuickTrace(pos,Vector(0,0,-999999),self)
 	surface.SetTextPos(485,505)
 	surface.DrawText("ALT")
 	surface.SetTextPos(485,520)

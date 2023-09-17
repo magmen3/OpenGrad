@@ -14,21 +14,21 @@ end
 
 function TOOL:reload(b)
 	self:SetStage(b and 0 or 2)
-	self.entity = nil
+	self = nil
 	return b
 end
 
 function TOOL:LeftClick(tr)
 	if tr.Hit and IsValid(tr.Entity) then
-		if not self.entity then
-			self.entity = tr.Entity
+		if not self then
+			self = tr.Entity
 			self:SetStage(1)
 			return true
 		else
-			if self.entity.wacLink then
-				return self:reload(self.entity:wacLink(tr.Entity))
+			if self.wacLink then
+				return self:reload(self:wacLink(tr.Entity))
 			elseif tr.Entity.wacLink then
-				return self:reload(tr.Entity:wacLink(self.entity))
+				return self:reload(tr.Entity:wacLink(self))
 			else
 				return self:reload(false)
 			end
@@ -38,6 +38,6 @@ end
 
 function TOOL:Reload(tr)
 	self:SetStage(0)
-	self.entity = nil
+	self = nil
 	return false
 end

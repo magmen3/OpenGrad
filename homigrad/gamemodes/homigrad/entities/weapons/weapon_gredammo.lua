@@ -94,7 +94,7 @@ else
     function SWEP:DrawWorldModel()
         self:SetWeaponHoldType("normal")
 
-        local owner = self.Owner
+        local owner = self:GetOwner()
         if not IsValid(owner) then self:DrawModel() return end
 
         local mdl = self.worldModel
@@ -106,7 +106,7 @@ else
         end
         self:CallOnRemove("huyhuy",function() mdl:Remove() end)
 
-        local matrix = self.Owner:GetBoneMatrix(11)
+        local matrix = self:GetOwner():GetBoneMatrix(11)
         if not matrix then return end
 
         mdl:SetRenderOrigin(matrix:GetTranslation())
@@ -146,8 +146,8 @@ else
     function SWEP:DrawHUD()
         if not hg_hint:GetBool() then return end
 
-        draw.SimpleText("Что-бы забрать зажми 'ALT' и нажми 'E'","DebugFixedSmall",ScrW() / 2,ScrH() - 125,white,TEXT_ALIGN_CENTER)
-        draw.SimpleText("Убрать подсказки hg_hint 0","DebugFixedSmall",ScrW() / 2,ScrH() - 100,white,TEXT_ALIGN_CENTER)
+        draw.SimpleText("Что-бы забрать зажми 'ALT' и нажми 'E'","DebugFixedSmall",ScrW() / 2,ScrH() - 125,color_white,TEXT_ALIGN_CENTER)
+        draw.SimpleText("Убрать подсказки hg_hint 0","DebugFixedSmall",ScrW() / 2,ScrH() - 100,color_white,TEXT_ALIGN_CENTER)
     end
 end
 

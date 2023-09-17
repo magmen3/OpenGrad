@@ -105,7 +105,7 @@ function ENT:ExplodeVehicle()
 	
 	self.destroyed = true
 
-	local ply = self.EntityOwner
+	local ply = selfOwner
 	local skin = self:GetSkin()
 	local Col = self:GetColor()
 	Col.r = Col.r * 0.8

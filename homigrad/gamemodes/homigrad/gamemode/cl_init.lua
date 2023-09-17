@@ -274,18 +274,25 @@ local function ToggleMenu(toggle)
         wepMenu:SetPos(w/3,h/2)
         wepMenu:MakePopup()
         wepMenu:SetKeyboardInputEnabled(false)
-		if wep:GetClass()!="weapon_hands" then
+		if wep:GetClass() ~= "weapon_hands" then
 			wepMenu:AddOption("Выкинуть",function()
 				LocalPlayer():ConCommand("say *drop")
 			end)
 		end
-        if wep:Clip1()>0 then
+        if wep:Clip1() > 0 then
             wepMenu:AddOption("Разрядить",function()
                 net.Start("Unload")
                 net.WriteEntity(wep)
                 net.SendToServer()
             end)
-        end
+			wepMenu:AddOption("Суицид",function()
+				LocalPlayer():ConCommand("suicide")
+			end)
+		else
+			wepMenu:AddOption("Запросить патроны",function()
+				LocalPlayer():ConCommand("hg_needbullets")
+			end)
+		end
 		if laserweps[wep:GetClass()] then
         wepMenu:AddOption("Вкл/Выкл Лазер",function()
             if LocalPlayer().Laser then
@@ -315,6 +322,12 @@ local function ToggleMenu(toggle)
         end)
 		plyMenu:AddOption("Меню Патрон",function()
 			LocalPlayer():ConCommand("hg_ammomenu")
+		end)
+		plyMenu:AddOption("Вызвать рвоту",function()
+			LocalPlayer():ConCommand("hg_blevota")
+		end)
+		plyMenu:AddOption("Встать/Упасть",function()
+			LocalPlayer():ConCommand("fake")
 		end)
 		local EZarmor = LocalPlayer().EZarmor
 		if JMod.GetItemInSlot(EZarmor, "eyes") then
@@ -458,3 +471,8 @@ end)
 
 hook.Add("DrawDeathNotice","no",function() return false end)
 
+hook.Add( "HUDShouldDraw", "RemoveThatShit", function( name ) 
+    if ( name == "CHudDamageIndicator" ) then 
+       return false 
+    end
+end )

@@ -6,8 +6,8 @@ hook.Add("Player Think","homigrad-hungry",function(ply,time)
 	if (ply.hungryNext or time) > time then return end
 	ply.hungryNext = time + 1
 
-	ply.hungryregen = math_Clamp((ply.hungryregen or 0) - 0.03,-0.01,50)
-	ply.hungry = math_Clamp((ply.hungry or 0) + ply.hungryregen,0,100)
+	ply.hungryregen = math_Clamp((ply.hungryregen or 0) -0.06, -0.01, 50)
+	ply.hungry = math_Clamp((ply.hungry or 0) + ply.hungryregen, 0, 100)
 
 	if ply.hungry < 5 then
 		ply:SetHealth(ply:Health() - 1)
@@ -35,7 +35,7 @@ hook.Add("Player Think","homigrad-hungry",function(ply,time)
 	ply:SetHealth(not ply.heartstop and (math.min(ply:Health() + math.max(math.ceil(ply.hungryregen),1),150)) or ply:Health())
 end)
 
-local furrypedik = {
+--[[local furrypedik = {
 	--["STEAM_0:1:508504180"] = true,
 	--["STEAM_0:0:419643141"] = true,
 	--["STEAM_0:1:130152051"] = true
@@ -66,17 +66,17 @@ local FurryModels = {
 	"models/player/smoky/Smokycl.mdl",
 	"models/LeymiRBA/Gyokami/Gyokami.mdl",
 	"models/eradium/protogens/cody.mdl"
-}
+}]]--
 
 hook.Add("PlayerSpawn","homigrad-hungry",function(ply)
 	if PLYSPAWN_OVERRIDE then return end
-	if furrypedik[ply:SteamID()] then
+	--[[if furrypedik[ply:SteamID()] then
 		--print("huy")
 		uwo(ply)
 		timer.Simple(1,function()
 			ply:SetModel(table.Random(FurryModels))
 		end)
-	end
+	end]]--
 	ply.hungry = 89
 	ply.hungryregen = 0
 	ply.hungryNext = 0
@@ -90,6 +90,7 @@ concommand.Add("hg_hungryinfo",function(ply)
 	ply:ChatPrint("hungryregen: " .. ply.hungryregen)
 end)
 
+--[[
 COMMANDS.uwu = {function(ply,args)
 	if !args[1] then
 		uwo(ply)
@@ -108,3 +109,4 @@ COMMANDS.uwu = {function(ply,args)
 		player.GetBySteamID( args[1] ):SetModel(table.Random(FurryModels))
 	end
 end}
+]]--

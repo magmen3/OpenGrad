@@ -43,7 +43,6 @@ net.Receive("round_next",function()
 	chat.AddText("Следущий режим : " .. TableRound(roundActiveNameNext).Name)
 end)
 
-local white = Color(255,255,255)
 showRoundInfoColor = Color(255,255,255)
 local yellow = Color(255,255,0)
 
@@ -58,10 +57,10 @@ hook.Add("HUDPaint","homigrad-roundstate",function()
 			local acurcetime = string.FormattedTime(time,"%02i:%02i")
 			if time < 0 then acurcetime = "акедумадекосай;3" end
 
-			draw.SimpleText(acurcetime,"HomigradFont",ScrW()/2,ScrH()-25,white,TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER)
+			draw.SimpleText(acurcetime,"HomigradFont",ScrW()/2,ScrH()-25,color_white,TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER)
 		end
 	else
-		draw.SimpleText(#PlayersInGame() < 1 and "Нужно минимум 2 игрока." or "Раунд закончен.","HomigradFont",ScrW()/2,ScrH()-25,white,TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER)
+		draw.SimpleText(#PlayersInGame() < 1 and "Нужно минимум 2 игрока." or "Раунд закончен.","HomigradFont",ScrW()/2,ScrH()-25,color_white,TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER)
 	end
 
 	local k = showRoundInfo - CurTime()

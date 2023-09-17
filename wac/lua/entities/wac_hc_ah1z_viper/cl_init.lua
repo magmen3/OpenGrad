@@ -85,7 +85,7 @@ function ENT:DrawPilotHud()
 	surface.SetTextPos(30, 410) 
 	surface.DrawText("SPD  "..math.floor(self:GetVelocity():Length()*0.1) .."kn")
 	surface.SetTextPos(30, 445)
-	local tr=util.QuickTrace(pos+self:GetUp()*10,Vector(0,0,-999999),self.Entity)
+	local tr=util.QuickTrace(pos+self:GetUp()*10,Vector(0,0,-999999),self)
 	surface.DrawText("ALT  "..math.ceil((pos.z-tr.HitPos.z)*0.01905).."m")
 	
 	if self:GetNWInt("seat_1_actwep") == 1 and self.weapons["Hydra 70"] then

@@ -1,6 +1,6 @@
 SWEP.Base                   = "weapon_base"
 
-SWEP.PrintName 				= "Перцовка"
+SWEP.PrintName 				= "Перцовый баллончик"
 SWEP.Author 				= "Homigrad"
 SWEP.Instructions			= "Гражданское газовое оружие самообороны, снаряженное слезоточивыми и раздражающими веществами (ирритантами)"
 SWEP.Category 				= "Разное"

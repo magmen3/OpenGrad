@@ -36,7 +36,7 @@ function hl2dm.PlayerInitialSpawn(ply) ply:SetTeam(math.random(1,2)) end
 function hl2dm.PlayerSpawn(ply,teamID)
 	local teamTbl = hl2dm[hl2dm.teamEncoder[teamID]]
 	local color = teamTbl[2]
-	ply:SetModel(teamTbl.models[math.random(#teamTbl.models)])
+	ply:SetModel(teamTbl.models[math.random(#teamTbl.models)] or "models/player/group01/male_03.mdl")
 
     ply:SetPlayerColor(color:ToVector())
 
@@ -48,17 +48,20 @@ function hl2dm.PlayerSpawn(ply,teamID)
 	if teamID == 2 then
 		ply:SetPlayerClass("combine")
 		if math.random(1,2) == 2 then ply:Give("weapon_hg_hl2") end
+		ply:Give("weapon_hg_stunstick")
 		--JMod.EZ_Equip_Armor(ply,"Medium-Helmet",Color(0,0,0,0))
 		JMod.EZ_Equip_Armor(ply,"Light-Vest",Color(0,0,0,0))
 	end
 
 	if teamID == 1 then
-		if math.random(1,4) == 4 then ply:Give("adrinaline") end
-		if math.random(1,4) == 4 then ply:Give("morphine") end
+		local rnd = math.random(1,4)
+		if rnd == 4 then ply:Give("adrinaline") end
+		if rnd == 4 then ply:Give("morphine") end
 		if math.random(1,3) == 3 then ply:Give("weapon_hg_hl2") end
 
 		JMod.EZ_Equip_Armor(ply,"Medium-Helmet",color)
 		local r = math.random(1,2)
+		if r == 2 then ply:Give("weapon_hg_crowbar") else ply:Give("weapon_pipe") end
 		JMod.EZ_Equip_Armor(ply,"Light-Vest",Color(0,0,0,0))
 	end
 

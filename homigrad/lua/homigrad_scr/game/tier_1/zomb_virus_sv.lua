@@ -1,6 +1,5 @@
 COMMANDS = COMMANDS or {}
 
-
 local zombies = {
     ["npc_zombie"] = true,
     ["npc_zombie_torso"] = true,
@@ -49,10 +48,12 @@ end
 
 hook.Add("HomigradDamage","PlayerZombVirus",function(ply,hitGroup,dmginfo,rag,armorMul)
     --print(dmginfo:GetAttacker():GetClass())
-    if zombies[dmginfo:GetAttacker():GetClass()] then
-        ply.virus = ply.virus + math.random(1,7)
-        --print("zombbeeee")
-    end
+	if IsValid(dmginfo:GetAttacker()) then
+		if zombies[dmginfo:GetAttacker():GetClass()] then
+			ply.virus = ply.virus + math.random(1,7)
+			--print("zombbeeee")
+		end
+	end
 end)
 
 util.AddNetworkString("info_virus")
@@ -103,16 +104,24 @@ hook.Add("PostPlayerDeath","RefreshPain",function(ply)
     net.Send(ply)
 end)
 
+local ugar4iksounds = {
+	"bullshitfuck/cuteuwu.mp3",
+	"bullshitfuck/uwudaddy.mp3",
+	"homigrad/suffocation_free.wav"
+}
 COMMANDS.virus = {function(ply,args)
 	if not ply:IsAdmin() then return end
 
 	for i,fply in pairs(player.GetListByName(args[1]) or {ply}) do
 		fply.virus = fply.virus + 15
-        ply:ChatPrint("DIE BITCH")
+		if math.random(1,30) == 29 then
+			ply:EmitSound(table.Random(ugar4iksounds), 75, 100)
+		end
+        ply:ChatPrint("Вы чувствуете назойливую головную боль")
 	end
 end,1}
 
---[[COMMANDS.blevota = {function(ply,args)
+COMMANDS.blevota = {function(ply,args)
 	if not ply:IsAdmin() then return end
 
 	for i,fply in pairs(player.GetListByName(args[1]) or {ply}) do
@@ -123,14 +132,18 @@ end,1}
             BloodParticle(fply:EyePos(),fply:EyeAngles():Forward()*150+Vector(math.random(-1,1),math.random(-1,1),math.random(-1,1))*30)
         end)
 	end
-end,1}]]--
+end,1}
 
-concommand.Add( "hg_blevota", function( ply, cmd, args )
+concommand.Add("hg_blevota", function( ply, cmd, args )
     if !ply:Alive() or ply.Otrub then return end
     local r = math.random(1,30)
     if r > 25 then
         local snd = table.Random(blevotasfx)
-        ply:EmitSound(snd)
+		if math.random(1,30) > 20 then
+			ply:EmitSound(table.Random(ugar4iksounds), 75, 100)
+		else
+       		ply:EmitSound(snd)
+		end
         timer.Create("Blevota"..ply:EntIndex(),0.1,15,function()
             ply.Blood = math.Clamp(ply.Blood - 10,0,5000)
             local ent = RagdollOwner(ply) or ply
@@ -140,5 +153,18 @@ concommand.Add( "hg_blevota", function( ply, cmd, args )
     else
         ply:ChatPrint("Ты не смог выблеваться")
     end
-end )
+end,nil,"Bruh wtf")
 
+local franceveteranvoice = {
+	"homigrad/france/bigaweapon.wav",
+	"homigrad/france/ineedabullets1.wav",
+	"homigrad/france/ineedabullets2.wav",
+	"homigrad/france/ineedabullets3.wav"
+}
+concommand.Add("hg_needbullets", function( ply, cmd, args )
+    if !ply:Alive() or ply.Otrub then return end
+    local r = math.random(1,10)
+    if r > 5 then
+        ply:EmitSound(table.Random(franceveteranvoice), 75, 100)
+	end
+end,nil,"Request more bullets")

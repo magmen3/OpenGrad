@@ -115,6 +115,9 @@ function GM:PlayerInitialSpawn(ply)
 	RoundActiveNextSync(ply)
 
 	SendSpawnPoint(ply)
+	if SERVER and IsValid(ply) then
+		ply:KillSilent()
+	end
 end
 
 function GM:PlayerDeathThink(ply)

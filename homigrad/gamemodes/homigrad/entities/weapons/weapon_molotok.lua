@@ -65,7 +65,7 @@ SWEP.DrawAmmo = true
 
 SWEP.DrawSound = "weapons/melee/holster_in_light.wav"
 SWEP.HitSound = "snd_jack_hmcd_hammerhit.wav"
-SWEP.FlashHitSound = "Impact.Flesh"
+SWEP.FleshHitSound = "Flesh.ImpactHard"
 SWEP.ShouldDecal = false
 SWEP.HoldTypeWep = "melee2"
 SWEP.DamageType = DMG_CLUB
@@ -106,21 +106,21 @@ local function TwoTrace(ply)
 end
 
 function SWEP:PrimaryAttack()
-    self.Owner:SetAnimation( PLAYER_ATTACK1 )
+    self:GetOwner():SetAnimation( PLAYER_ATTACK1 )
 
     if SERVER then
-        self:SetNextPrimaryFire( CurTime() + 1 / (self.Owner.stamina / 100) )
+        self:SetNextPrimaryFire( CurTime() + 1 / (self:GetOwner().stamina / 100) )
         self:SetNextSecondaryFire(CurTime() + 2)
-        self.Owner:EmitSound( "weapons/slam/throw.wav",60 )
-        self.Owner.stamina = math.max(self.Owner.stamina - 1,0)
+        self:GetOwner():EmitSound( "weapons/slam/throw.wav",60 )
+        self:GetOwner().stamina = math.max(self:GetOwner().stamina - 1,0)
     end
     self:GetOwner():LagCompensation( true )
-    local ply = self.Owner
+    local ply = self:GetOwner()
 
     local tra = {}
     tra.start = ply:GetAttachment(ply:LookupAttachment("eyes")).Pos
     tra.endpos = tra.start + ply:GetAngles():Forward() * 80
-    tra.filter = self.Owner
+    tra.filter = self:GetOwner()
     local Tr = util.TraceLine(tra)
     local t = {}
     local pos1, pos2
@@ -128,7 +128,7 @@ function SWEP:PrimaryAttack()
     if not Tr.Hit then
         t.start = ply:GetAttachment(ply:LookupAttachment("eyes")).Pos
         t.endpos = t.start + ply:GetAngles():Forward() * 80
-        t.filter = function(ent) return ent ~= self.Owner and (ent:IsPlayer() or ent:IsRagdoll()) end
+        t.filter = function(ent) return ent ~= self:GetOwner() and (ent:IsPlayer() or ent:IsRagdoll()) end
         t.mins = -Vector(10,10,10)
         t.maxs = Vector(10,10,10)
         tr = util.TraceHull(t)
@@ -140,17 +140,17 @@ function SWEP:PrimaryAttack()
     pos2 = tr.HitPos - tr.HitNormal
     if true then
         if SERVER and tr.HitWorld then
-            self.Owner:EmitSound(  self.HitSound,60  )
+            self:GetOwner():EmitSound(  self.HitSound,60  )
         end
 
         if IsValid( tr.Entity ) and SERVER then
             local dmginfo = DamageInfo()
             dmginfo:SetDamageType( self.DamageType )
-            dmginfo:SetAttacker( self.Owner )
+            dmginfo:SetAttacker( self:GetOwner() )
             dmginfo:SetInflictor( self )
             dmginfo:SetDamagePosition( tr.HitPos )
-            dmginfo:SetDamageForce( self.Owner:GetForward() * self.Primary.Force )
-            local angle = self.Owner:GetAngles().y - tr.Entity:GetAngles().y
+            dmginfo:SetDamageForce( self:GetOwner():GetForward() * self.Primary.Force )
+            local angle = self:GetOwner():GetAngles().y - tr.Entity:GetAngles().y
             if angle < -180 then angle = 360 + angle end
 
             if angle <= 90 and angle >= -90 then
@@ -160,27 +160,27 @@ function SWEP:PrimaryAttack()
             end
 
             if tr.Entity:IsNPC() or tr.Entity:IsPlayer() then
-                self.Owner:EmitSound( self.FlashHitSound,60 )
+                self:GetOwner():EmitSound( self.FleshHitSound,60 )
             else
                 if IsValid( tr.Entity:GetPhysicsObject() ) then
                     local dmginfo = DamageInfo()
                     dmginfo:SetDamageType( self.DamageType )
-                    dmginfo:SetAttacker( self.Owner )
+                    dmginfo:SetAttacker( self:GetOwner() )
                     dmginfo:SetInflictor( self )
                     dmginfo:SetDamagePosition( tr.HitPos )
-                    dmginfo:SetDamageForce( self.Owner:GetForward() * self.Primary.Force*7 )
+                    dmginfo:SetDamageForce( self:GetOwner():GetForward() * self.Primary.Force*7 )
                     dmginfo:SetDamage( self.Primary.Damage )
                     tr.Entity:TakeDamageInfo(dmginfo)
                     if tr.Entity:GetClass() == "prop_ragdoll" then
-                        self.Owner:EmitSound(  self.FlashHitSound,60  )
+                        self:GetOwner():EmitSound(  self.FleshHitSound,60  )
                     else
-                        self.Owner:EmitSound(  self.HitSound,60  )
+                        self:GetOwner():EmitSound(  self.HitSound,60  )
                     end
                 end
             end
             tr.Entity:TakeDamageInfo( dmginfo )
         end
-        --self.Owner:EmitSound( Sound( self.HitSound ),60 )
+        --self:GetOwner():EmitSound( Sound( self.HitSound ),60 )
     end
     if SERVER and Tr.Hit and self.ShouldDecal then
         if IsValid(Tr.Entity) and Tr.Entity:GetClass()=="prop_ragdoll" then
@@ -232,7 +232,7 @@ function SWEP:SecondaryAttack()
             ent1.weld[weldEntity] = ent2
             ent2.weld[weldEntity] = ent1
 
-            self.Owner:EmitSound("snd_jack_hmcd_hammerhit.wav",65)
+            self:GetOwner():EmitSound("snd_jack_hmcd_hammerhit.wav",65)
         end
         self:SetNextSecondaryFire(CurTime() + 1)
         self:GetOwner():SetAnimation(PLAYER_ATTACK1)
@@ -278,7 +278,7 @@ function SWEP:SecondaryAttack()
 end
 
 function SWEP:Think()
-    local ply = self.Owner
+    local ply = self:GetOwner()
     if SERVER then
         if ply:KeyDown(IN_ATTACK2) then
             if ply:KeyDown(IN_USE) and not self.modechanged then
@@ -310,31 +310,30 @@ else
     end)
 end
 
-local white = Color(255,255,255)
-local bonenames = {
-    ['ValveBiped.Bip01_Head1']="голову",
-    ['ValveBiped.Bip01_Spine']="спину",
-    ['ValveBiped.Bip01_Spine2']="спину",
-    ['ValveBiped.Bip01_Pelvis']="живот",
-    ['ValveBiped.Bip01_R_Hand']="правую кисть",
-    ['ValveBiped.Bip01_R_Forearm']="правое предплечье",
-    ['ValveBiped.Bip01_R_UpperArm']="правое предплечье",
-    ['ValveBiped.Bip01_R_Foot']="правую ногу",
-    ['ValveBiped.Bip01_R_Thigh']='правое бедро',
-    ['ValveBiped.Bip01_R_Calf']='правую голень',
-    ['ValveBiped.Bip01_R_Shoulder']='правое плечо',
-    ['ValveBiped.Bip01_R_Elbow']='правый локоть',
-	['ValveBiped.Bip01_L_Hand']='левую кисть',
-    ['ValveBiped.Bip01_L_Forearm']='левое предплечье',
-    ['ValveBiped.Bip01_L_UpperArm']="левое предплечье",
-    ['ValveBiped.Bip01_L_Foot']='левую ногу',
-    ['ValveBiped.Bip01_L_Thigh']='левое бедро',
-    ['ValveBiped.Bip01_L_Calf']='левую голень',
-    ['ValveBiped.Bip01_L_Shoulder']='левое плечо',
-    ['ValveBiped.Bip01_L_Elbow']='левый локоть'
-}
 function SWEP:DrawHUD()
-    local owner = self.Owner
+	local bonenames = {
+		['ValveBiped.Bip01_Head1']="голову",
+		['ValveBiped.Bip01_Spine']="спину",
+		['ValveBiped.Bip01_Spine2']="спину",
+		['ValveBiped.Bip01_Pelvis']="живот",
+		['ValveBiped.Bip01_R_Hand']="правую кисть",
+		['ValveBiped.Bip01_R_Forearm']="правое предплечье",
+		['ValveBiped.Bip01_R_UpperArm']="правое предплечье",
+		['ValveBiped.Bip01_R_Foot']="правую ногу",
+		['ValveBiped.Bip01_R_Thigh']='правое бедро',
+		['ValveBiped.Bip01_R_Calf']='правую голень',
+		['ValveBiped.Bip01_R_Shoulder']='правое плечо',
+		['ValveBiped.Bip01_R_Elbow']='правый локоть',
+		['ValveBiped.Bip01_L_Hand']='левую кисть',
+		['ValveBiped.Bip01_L_Forearm']='левое предплечье',
+		['ValveBiped.Bip01_L_UpperArm']="левое предплечье",
+		['ValveBiped.Bip01_L_Foot']='левую ногу',
+		['ValveBiped.Bip01_L_Thigh']='левое бедро',
+		['ValveBiped.Bip01_L_Calf']='левую голень',
+		['ValveBiped.Bip01_L_Shoulder']='левое плечо',
+		['ValveBiped.Bip01_L_Elbow']='левый локоть'
+	}
+    local owner = self:GetOwner()
     local tr = {}
     tr.start = owner:GetAttachment(owner:LookupAttachment("eyes")).Pos
     local dir = Vector(1,0,0)
@@ -346,7 +345,7 @@ function SWEP:DrawHUD()
 
     local traceResult = util.TraceLine(tr)
     local hit = traceResult.Hit and 1 or 0
-    local hitEnt = traceResult.Entity~=Entity(0) and 1 or 0
+    local hitEnt = traceResult.Entity ~= Entity(0) and 1 or 0
     local isRag = traceResult.Entity:IsRagdoll()
     local frac = traceResult.Fraction
     surface.SetDrawColor(Color(255 * hitEnt, 255 * hitEnt, 255 * hitEnt, 255 * hit))

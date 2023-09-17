@@ -1,6 +1,5 @@
-
 surface.CreateFont("HomigradFont",{
-	font = "Roboto",
+	font = "Roboto", -- поставить Coolvetica
 	size = 18,
 	weight = 1100,
 	outline = false
@@ -12,7 +11,6 @@ surface.CreateFont("HomigradFontBig",{
 	weight = 1100,
 	outline = false
 })
-
 
 surface.CreateFont("HomigradFontLarge",{
 	font = "Roboto",

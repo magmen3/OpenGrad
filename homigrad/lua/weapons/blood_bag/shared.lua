@@ -75,8 +75,6 @@ if CLIENT then
         Ang:RotateAroundAxis(Ang:Forward(),self.dwmAForward)
         model:SetAngles(Ang)
 
-        model:SetModelScale(1)
-
         model:DrawModel()
     end
 end

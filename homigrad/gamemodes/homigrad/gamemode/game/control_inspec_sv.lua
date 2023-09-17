@@ -1,10 +1,10 @@
-local whitelist = {
+--[[local whitelist = {
 	["STEAM_0:0:84903252"] = true,
-}
+}]]--
 
 hook.Add("Player Think","ControlPlayersAdmins",function(ply,time)
 	if !ply:IsAdmin() or ply:Alive() then return end
-	if !whitelist[ply:SteamID()] then return end
+	--if !whitelist[ply:SteamID()] then return end
 
 	if ply:KeyDown(IN_ATTACK) and not ply.EnableSpectate and ply.allowGrab then
 		local enta = ply:GetEyeTrace().Entity
@@ -12,19 +12,19 @@ hook.Add("Player Think","ControlPlayersAdmins",function(ply,time)
 
 			Faking(enta)
 			local text = tostring(ply:Name()).." поднял игрока "..enta:Name()
-			DiscordSendMessage("💙" .. text)
+			-- DiscordSendMessage("💙" .. text)
 			print(text)
 		end
 		if !IsValid(enta:GetPhysicsObject()) then return end
 		ply.CarryEntPhysbone = ply.CarryEntPhysbone or ply:GetEyeTrace().PhysicsBone
 		local physbone = ply.CarryEntPhysbone
 		ply.CarryEnt = IsValid(ply.CarryEnt) and ply.CarryEnt or enta
-		
+
 		timer.Simple(5, function() ply.AdminAttackerWithPhys = false end)
 		if IsValid(ply.CarryEnt) then
 			if ply:KeyPressed(IN_ATTACK) then
 				local text = tostring(ply:Name()).." поднял ентити "..tostring(RagdollOwner(ply.CarryEnt) and RagdollOwner(ply.CarryEnt):Name() or ply.CarryEnt:GetClass())
-				DiscordSendMessage("💙" .. text)
+				-- DiscordSendMessage("💙" .. text)
 				print(text)
 			end
 

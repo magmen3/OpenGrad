@@ -58,13 +58,44 @@ COMMANDS.noguilt = {function(ply,args)
 	end
 end,1}
 
---[[COMMANDS.fake = {function(ply,args)
+COMMANDS.fake = {function(ply,args)
 	if not ply:IsAdmin() then return end
 
 	for i,ply in pairs(player.GetListByName(args[1]) or {ply}) do
 		Faking(ply)
 	end
-end,1}]]--
+end,1}
+
+COMMANDS.forcewakeup = {function(ply,args)
+	if not ply:IsAdmin() then return end
+
+	for i,ply in pairs(player.GetListByName(args[1]) or {ply}) do
+		ply.pain = 0
+		ply.painlosing = 1
+		ply.stamina = 100
+		ply:ConCommand("soundfade 0 1")
+		ply:SetDSP(0)
+		ply.Otrub = false
+		ply:SetNWInt("Otrub", false)
+		net.Start("info_pain")
+		net.WriteFloat(ply.pain)
+		net.WriteFloat(ply.painlosing)
+		net.Send(ply)
+	end
+end,1}
+
+COMMANDS.forceuncon = {function(ply,args)
+	if not ply:IsAdmin() then return end
+
+	for i,ply in pairs(player.GetListByName(args[1]) or {ply}) do
+		ply.pain = ply.pain + 1000
+		ply.stamina = 0
+		ply.Otrub = true
+		ply:SetNWInt("Otrub", true)
+		ply:SetDSP(16)
+		Faking(ply)
+	end
+end,1}
 
 function GuiltCheck(att,ply)
 	if att.Guilt >= 100 then
@@ -73,11 +104,7 @@ function GuiltCheck(att,ply)
 		if not att.noguilt and not att:HasGodMode() then
 			att:Kill()
 
-			if not validUserGroup[att:GetUserGroup()] then
-				RunConsoleCommand("ulx","fakeban",att:Name(),"10","Kicked and Banned for RDM")
-			else
-				RunConsoleCommand("ulx","fakeban",att:Name(),"10","Kicked and Banned for RDM")
-			end
+			RunConsoleCommand("ulx","fakeban",att:Name(),"10",math.random(1,2)==2 and "Kicked and Banned for RDM" or "Чтоб не втыкал")
 		end
 	end
 end
@@ -91,9 +118,11 @@ hook.Add("HomigradDamage","guilt-logic",function(ply,hitGroup,dmgInfo,rag)
 end)
 
 hook.Add("Should Fake Collide","guilt",function(ply,hitEnt,data)
+	if not IsValid(hitEnt) then return end
+	if isbool(hitEnt) then return end
 	if hitEnt == game.GetWorld() then return end
-	hitEnt = RagdollOwner(hitEnt)
 	if not hitEnt:IsPlayer() then return end
+	hitEnt = RagdollOwner(hitEnt)
 
 	local dmgInfo = DamageInfo()
 	dmgInfo:SetAttacker(hitEnt)
@@ -117,7 +146,7 @@ end)
 	end
 	timer.Create("seizure"..ply:EntIndex(),math.random(7,15),1,function()
 		if ply:IsValid() and ply:Alive() then
-			ply:Kill()
+			ply:TakeDamage(math.random(80,90))
 		end
 	end)
 end]]--
@@ -151,9 +180,9 @@ end)
 concommand.Add("hg_getguilt",function(ply)
 	local text = "Guilt information\n"
 
-	for i,ply in pairs(player.GetAll()) do
-		text = text .. ply:Name() .. "\t\t\t\t" .. ply.Guilt .. "\n"
+	for _, ply in pairs(player.GetAll()) do
+		text = text .. ply:Name() .. "\t\t\t" .. ply.Guilt .. "\n"
 	end
 
-	ply:ConsolePrint(text)
-end)
+	print(text)
+end,nil,"Prints guilt info of all players on server.")

@@ -69,8 +69,8 @@ function EFFECT:Init(data)
 		particle:SetColor(94, 84, 79)
 	end
 	self.emitter:Finish()
- 	self.Entity:SetModel( "models/Combine_Helicopter/helicopter_bomb01.mdl" ) 
- 	self.Entity:SetPos(self.vOffset)
+ 	self:SetModel( "models/Combine_Helicopter/helicopter_bomb01.mdl" ) 
+ 	self:SetPos(self.vOffset)
 end 
  
 function EFFECT:Think()

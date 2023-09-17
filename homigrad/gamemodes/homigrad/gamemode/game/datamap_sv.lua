@@ -7,8 +7,8 @@ SpawnPointsList = {
 	spawnpointst = {"red",Color(255,0,0)},
 	spawnpointsct = {"blue",Color(0,0,255)},
 
-	spawnpointswick = {"spawnpointswick",Color(255,0,0)},
-	spawnpointsnaem = {"spawnpointsnaem",Color(0,0,255)},
+	-- spawnpointswick = {"spawnpointswick",Color(255,0,0)},
+	-- spawnpointsnaem = {"spawnpointsnaem",Color(0,0,255)},
 
 	spawnpoints_ss_police = {"police",Color(0,0,125)},
 	spawnpoints_ss_school = {"school",Color(0,255,0)},
@@ -46,19 +46,19 @@ SpawnPointsList = {
 	car_red_tank = {"car_red_tank",Color(125,125,125)},
 	car_blue_tank = {"car_blue_tank",Color(125,125,125)},
 
-	center = {"center",Color(255,255,255)},
+	center = {"center",color_white},
 
 	jailbreak = {"jailbreak",Color(0,125,0)},
 	jailbreak_doors = {"jailbreak_doors",Color(255,0,0)},
 
-	darkrp_jail = {"darkrp_jail",Color(255,255,255)},
+	-- darkrp_jail = {"darkrp_jail",Color(255,255,255)},
 
-	scp173 = {"scp173",Color(255,0,0)},
-	scp096 = {"scp096",Color(255,0,0)},
+	-- scp173 = {"scp173",Color(255,0,0)},
+	-- scp096 = {"scp096",Color(255,0,0)},
 
-	scpWhite = {"scpWhite",Color(255,255,255)},
+	-- scpWhite = {"scpWhite",color_white},
 
-	bhop = {"bhop",Color(255,0,0)},
+	-- bhop = {"bhop",Color(255,0,0)},
 
 	level_construct = {"level_construct",Color(0,0,0)},
 

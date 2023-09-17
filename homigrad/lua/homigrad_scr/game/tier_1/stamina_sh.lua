@@ -19,17 +19,13 @@ else
 	end)
 end
 
-
 gg = function(ply,mv,value)
 	value = mv:GetMaxSpeed() * value
 
-	ply:SetRunSpeed(Lerp((ply:IsSprinting() and mv:GetForwardSpeed() > 1) and 0.05 or 1,ply:GetRunSpeed(),(ply:IsSprinting() and mv:GetForwardSpeed() > 1) and 450 or ply:GetWalkSpeed()))
+	ply:SetRunSpeed(Lerp((ply:IsSprinting() and mv:GetForwardSpeed() > 1) and 0.03 or 1,ply:GetRunSpeed(),(ply:IsSprinting() and mv:GetForwardSpeed() > 1) and 450 or ply:GetWalkSpeed()))
 
 	mv:SetMaxSpeed(value)
 	mv:SetMaxClientSpeed(value)
-
-
-	if ply.IsProne and ply:IsProne() then return end
 
 	local value = ply.EZarmor
 	value = value and ply.EZarmor.speedfrac

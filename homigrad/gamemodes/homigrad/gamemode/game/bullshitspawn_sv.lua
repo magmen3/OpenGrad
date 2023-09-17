@@ -71,7 +71,7 @@ weaponsuncommon = {
 
 weaponsrare = {
 	"weapon_beretta",
-	"weapon_remington870",
+	"weapon_beanbag",
 	"weapon_glock",
 	"weapon_t",
 	"weapon_hg_molotov",
@@ -202,7 +202,7 @@ hook.Add("PropBreak","homigrad",function(att,ent)
 	end
 
 	if type1 then
-		--sound.Emit(huy,sndsDrop[type1],50,0.5)
+		-- sound.Emit(huy,sndsDrop[type1],50,0.5)
 		--круто на наверное такое не нужно
 	end
 end)
@@ -276,6 +276,8 @@ hook.Add("Boxes Think", "SpawnBoxes",function()
 		ent.Spawned = true
 	end
 
-	ent:SetPos(spawns[math.random(#spawns)] + vec)
-	ent:Spawn()
+	if IsValid(ent) then --!! если коробки не будут спавнится то убрать
+		ent:SetPos(spawns[math.random(#spawns)] + vec)
+		ent:Spawn()
+	end
 end)

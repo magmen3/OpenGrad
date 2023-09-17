@@ -22,12 +22,12 @@ concommand.Add("hg_fogsetcolor",function(ply,cmd,args)
 	local r,g,b = tonumber(args[1]),tonumber(args[2]),tonumber(args[3])
 	dataFogMap[1] = {r,g,b}
 	file.Write("homigrad/fog_maps_color.txt",util.TableToJSON(dataFog))
-end)
+end,nil,"Sets color for fog")
 
 concommand.Add("hg_fogset",function(ply,cmd,args)
 	dataFogMap[2] = tonumber(args[1])
 	file.Write("homigrad/fog_maps_color.txt",util.TableToJSON(dataFog))
-end)
+end,nil,"Enable fog (0 for false, don't set 1)")
 
 hook.Add("SetupWorldFog","shlib",function()
     local distance = GetGlobalVar("Fog Dis")
@@ -63,7 +63,6 @@ end)
 
 local ang = Angle(0,0,0)
 
-local white = Color(255,255,255)
 local mat = Material("color")
 
 local surface_SetMaterial = surface.SetMaterial
@@ -91,10 +90,10 @@ hook.Add("PostDrawOpaqueRenderables","shlib",function()
 	surface_SetMaterial(mat)
 	render_SetColorMaterial()
 
-	render_DrawQuadEasy(vec,normal,100000,100000,white)
+	render_DrawQuadEasy(vec,normal,100000,100000,color_white)
 end)
 
-concommand.Add("hg_fog",function(ply)
+concommand.Add("hg_fogcheck",function(ply)
     print(GetGlobalVar("Fog Dis"))
     print(GetGlobalVar("Fog Color"))
-end)
+end,nil,"Checks for fog")

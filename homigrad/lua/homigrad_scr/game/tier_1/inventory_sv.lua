@@ -89,7 +89,7 @@ net.Receive("ply_take_item",function(len,ply)
 
 	if ply:HasWeapon(wep) then
 		if lootEnt:IsPlayer() and (lootEnt.curweapon == wep and not lootEnt.Otrub) then return end
-		if wepInfo.Clip1!=nil and wepInfo.Clip1 > 0 then
+		if wepInfo.Clip1~=nil and wepInfo.Clip1 > 0 then
 			ply:GiveAmmo(wepInfo.Clip1,wepInfo.AmmoType)
 			wepInfo.Clip1 = 0
 		else

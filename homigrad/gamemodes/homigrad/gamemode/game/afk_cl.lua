@@ -3,7 +3,7 @@ afkStart = CurTime()
 local time
 hook.Add("CreateMove","afk",function(moveData)
 	local ply = LocalPlayer()
-	if ply:IsAdmin() then return end
+	-- if ply:IsAdmin() then return end
 
 	local time = CurTime()
 	

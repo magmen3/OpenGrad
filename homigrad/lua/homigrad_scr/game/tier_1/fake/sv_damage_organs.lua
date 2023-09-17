@@ -101,8 +101,16 @@ hook.Add("HomigradDamage","Organs",function(ply,hitgroup,dmginfo,rag,armorMul,ar
             if ply.Organs['lungs'] ~= 0 then
                 ply.Organs['lungs'] = math.max(ply.Organs['lungs'] - dmg,0)
                 if ply.Organs['lungs'] == 0 then
-                    timer.Simple(3,function()
-                        if ply:Alive() then ply:ChatPrint("Ты чувствуешь, как воздух заполняет твою грудную клетку. ") end
+                    timer.Simple(math.random(2,4),function()
+                        if ply:Alive() then
+							ply:ChatPrint("Ты чувствуешь, как воздух заполняет твою грудную клетку. ")
+							timer.Create("Blevota"..ply:EntIndex(),0.1,15,function()
+								ply.Blood = math.Clamp(ply.Blood - 10,0,5000)
+								local ent = RagdollOwner(ply) or ply
+								local att = ent:GetAttachment(ent:LookupAttachment("eyes"))
+								BloodParticle(att.Pos - att.Ang:Up() * 2,ply:EyeAngles():Forward()*90+VectorRand(-15,15)+ply:GetVelocity())
+							end)
+						end
                     end)
                 end
             end
@@ -112,7 +120,7 @@ hook.Add("HomigradDamage","Organs",function(ply,hitgroup,dmginfo,rag,armorMul,ar
         local huy = util.IntersectRayWithOBB(dmgpos,penetration,pos,ang,Vector(3,-6,-4), Vector(9,4,4))
 
         if huy then
-            if ply.Organs['brain']!=0 and dmginfo:IsDamageType(DMG_BULLET) and not inf.RubberBullets then
+            if ply.Organs['brain']~=0 and dmginfo:IsDamageType(DMG_BULLET) and not inf.RubberBullets then
                 ply.Organs['brain']=math.max(ply.Organs['brain']-dmg,0)
                 if ply.Organs["brain"] == 0 then
                     ply:Kill()
@@ -127,7 +135,7 @@ hook.Add("HomigradDamage","Organs",function(ply,hitgroup,dmginfo,rag,armorMul,ar
         local huy = util.IntersectRayWithOBB(dmgpos,penetration, pos, ang, Vector(-4,-1,-6),Vector(2,5,-1))
 
         if huy then --ply:ChatPrint("You were hit in the liver.")
-            if ply.Organs['liver']!=0 and !dmginfo:IsDamageType(DMG_CLUB) then
+            if ply.Organs['liver']~=0 and !dmginfo:IsDamageType(DMG_CLUB) then
                 ply.Organs['liver']=math.max(ply.Organs['liver']-dmg,0)
                 --if ply.Organs['liver']==0 then ply:ChatPrint("Твоя печень была уничтожена.") end
             end
@@ -138,7 +146,7 @@ hook.Add("HomigradDamage","Organs",function(ply,hitgroup,dmginfo,rag,armorMul,ar
         local huy = util.IntersectRayWithOBB(dmgpos,penetration, pos, ang, Vector(-4,-1,-1),Vector(2,5,6))
         
         if huy then --ply:ChatPrint("You were hit in the stomach.")
-            if ply.Organs['stomach']!=0 and !dmginfo:IsDamageType(DMG_CLUB) then
+            if ply.Organs['stomach']~=0 and !dmginfo:IsDamageType(DMG_CLUB) then
                 ply.Organs['stomach']=math.max(ply.Organs['stomach']-dmg,0)
                 if ply.Organs['stomach']==0 then ply:ChatPrint("Ты чувствуешь острую боль в животе.") end
             end
@@ -149,9 +157,9 @@ hook.Add("HomigradDamage","Organs",function(ply,hitgroup,dmginfo,rag,armorMul,ar
         local huy = util.IntersectRayWithOBB(dmgpos,penetration, pos, ang, Vector(-4,-1,-6),Vector(1,5,6))
         
         if huy then --ply:ChatPrint("You were hit in the intestines.")
-            if ply.Organs['intestines']!=0 and !dmginfo:IsDamageType(DMG_CLUB) then
+            if ply.Organs['intestines']~=0 and !dmginfo:IsDamageType(DMG_CLUB) then
                 ply.Organs['intestines']=math.max(ply.Organs['intestines']-dmg,0)
-                --if ply.Organs['intestines']==0 then ply:ChatPrint("Твои кишечник был уничтожен.")end
+                if ply.Organs['intestines']==0 then ply:ChatPrint("Ты чувствуешь острую боль в кишечнике.")end
             end
         end
 
@@ -159,9 +167,9 @@ hook.Add("HomigradDamage","Organs",function(ply,hitgroup,dmginfo,rag,armorMul,ar
         local huy = util.IntersectRayWithOBB(dmgpos,penetration, pos, ang, Vector(1,0,-1),Vector(5,4,3))
         
         if huy then --ply:ChatPrint("You were hit in the heart.")
-            if ply.Organs['heart']!=0 and !dmginfo:IsDamageType(DMG_CLUB) then
+            if ply.Organs['heart']~=0 and !dmginfo:IsDamageType(DMG_CLUB) then
                 ply.Organs['heart']=math.max(ply.Organs['heart']-dmg,0)
-                --if ply.Organs['heart']==0 then ply:ChatPrint("Ты чувствоешь очень сильную боль в сердце.") end
+                if ply.Organs['heart']==0 then ply:ChatPrint("Ты чувствоешь острую боль в сердце.") end
             end
         end
 
@@ -172,7 +180,7 @@ hook.Add("HomigradDamage","Organs",function(ply,hitgroup,dmginfo,rag,armorMul,ar
             local huy2 = util.IntersectRayWithOBB(dmgpos,penetration, pos, ang, Vector(-3,-2,1),Vector(0,-1,2))
 
             if huy or huy2 then --ply:ChatPrint("You were hit in the artery.")
-                if ply.Organs['artery']!=0 and !dmginfo:IsDamageType(DMG_CLUB) then
+                if ply.Organs['artery']~=0 and !dmginfo:IsDamageType(DMG_CLUB) then
                     ply.Organs['artery']=math.max(ply.Organs['artery']-dmg,0)
                 end
             end
@@ -187,7 +195,7 @@ hook.Add("HomigradDamage","Organs",function(ply,hitgroup,dmginfo,rag,armorMul,ar
         local pos = ent:GetBonePosition(ent:LookupBone('ValveBiped.Bip01_Spine1'))
         local huy2 = util.IntersectRayWithOBB(dmgpos,penetration, pos, ang, Vector(-8,-3,-1),Vector(2,-2,1))
         if (huy or huy2) then --ply:ChatPrint("You were hit in the spine.")
-            if ply.Organs['spine']!=0 then
+            if ply.Organs['spine']~=0 then
                 ply.Organs['spine']=math.Clamp(ply.Organs['spine']-dmg,0,1)
                 if ply.Organs['spine']==0 then
                     timer.Simple(0.01,function()

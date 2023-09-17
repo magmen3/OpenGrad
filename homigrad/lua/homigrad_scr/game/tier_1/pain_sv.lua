@@ -8,9 +8,9 @@ hook.Add("PlayerSpawn","homigrad-pain",function(ply)
 	ply.otravlen2 = false
 end)
 
-for i,ply in pairs(player.GetAll()) do
+--[[for i,ply in pairs(player.GetAll()) do
 	--hook.Run("PlayerInitialSpawn",ply)
-end
+end]]--
 
 hook.Add("HomigradDamage","PlayerPainGrowth",function(ply,hitGroup,dmginfo,rag,armorMul)
 	if dmginfo:GetAttacker():IsRagdoll() then return end
@@ -66,7 +66,6 @@ hook.Add("Player Think","homigrad-pain",function(ply,time)
 		ply.pain = ply.pain + 8
 		--ply.KillReason = "painlosing"
 		--ply:Kill()
-		
 	end
 
 	if ply.pain >= 1800 then
@@ -101,7 +100,6 @@ hook.Add("Player Think","homigrad-pain",function(ply,time)
 
 	if IsUnconscious(ply) then
 		GetUnconscious(ply)
-
 		--net.Start("inventory")
 		--net.WriteTable(empty)
 		--net.Send(ply)

@@ -9,8 +9,8 @@ SWEP.UseHands				= false
 SWEP.ViewModelFlip			= false
 SWEP.ViewModelFOV			= 10
 SWEP.Weight 				= 42
-SWEP.AutoSwitchTo 			= true
-SWEP.AutoSwitchFrom 		= true
+SWEP.AutoSwitchTo 			= false
+SWEP.AutoSwitchFrom 		= false
 SWEP.HoldType				= "slam"
 
 SWEP.RefilAmount			= 0.95
@@ -179,7 +179,7 @@ if CLIENT then
 end
 
 function SWEP:Initialize()
-	self.Weapon:SetHoldType( self.HoldType )
+	self:SetHoldType( self.HoldType )
 	
 	local Owner = self:GetOwner()
 	if IsValid( Owner ) then
@@ -350,7 +350,7 @@ function SWEP:SecondaryAttack()
 end
 
 function SWEP:Deploy()
-	self.Weapon:SendWeaponAnim( ACT_VM_DRAW )
+	self:SendWeaponAnim( ACT_VM_DRAW )
 	return true
 end
 

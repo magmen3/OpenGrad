@@ -228,7 +228,7 @@ function EndRound(winner)
 
 			if not success then
 				local text = "Error Start Round '" .. roundActiveNameNext .. "'\n" .. tostring(err)
-
+				print(text)
 				EndRound()
 			end
 		end
@@ -250,12 +250,12 @@ local function donaterVoteLevelEnd(t,argv,calling_ply,args)
 	end
 
 	if winner == 2 then
-		PrintMessage(HUD_PRINTTALK,"Раунд будет закончен.")
+		ChatPrint("Раунд будет закончен.")
 		EndRound()
 	elseif winner == 1 then
-		PrintMessage(HUD_PRINTTALK,"Раунд не будет закончен.")
+		ChatPrint("Раунд не будет закончен.")
 	else
-		PrintMessage(HUD_PRINTTALK,"Голосование не прошло успешно или было остановлено.")
+		ChatPrint("Голосование не прошло успешно или было остановлено.")
 	end
 
 	calling_ply.canVoteNext = CurTime() + 300
@@ -285,12 +285,12 @@ local function donaterVoteLevel(t,argv,calling_ply,args)
 	end
 
 	if winner == 2 then
-		PrintMessage(HUD_PRINTTALK,"Режим сменится в следующем раунде на " .. tostring(args[1]))
+		ChatPrint("Режим сменится в следующем раунде на " .. tostring(args[1]))
 		SetActiveNextRound(args[1])
 	elseif winner == 1 then
-		PrintMessage(HUD_PRINTTALK,"Смены режима не состоялось.")
+		ChatPrint("Смены режима не состоялось.")
 	else
-		PrintMessage(HUD_PRINTTALK,"Голосование не прошло успешно или было остановлено.")
+		ChatPrint("Голосование не прошло успешно или было остановлено.")
 	end
 
 	calling_ply.canVoteNext = CurTime() + 300

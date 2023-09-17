@@ -27,16 +27,16 @@ SWEP.SlotPos				= 2
 SWEP.DrawAmmo				= true
 SWEP.DrawCrosshair			= false
 
-SWEP.ViewModel				= "models/weapons/gredwitch/w_binoculars.mdl"
-SWEP.WorldModel				= "models/weapons/gredwitch/w_binoculars.mdl"
+SWEP.ViewModel				= "models/maxofs2d/camera.mdl"
+SWEP.WorldModel				= "models/maxofs2d/camera.mdl"
 
 SWEP.ViewBack = true
 SWEP.ForceSlot1 = true
 
 SWEP.dwsPos = Vector(10,10,10)
 
-SWEP.vbw = true
-SWEP.vbwPistol = true
+SWEP.vbw = false
+SWEP.vbwPistol = false
 SWEP.vbwPos = Vector(47,-6,10)
 SWEP.vbwAng = Angle(-180,90,0)
 SWEP.vbwModelScale = 0.8
@@ -51,12 +51,12 @@ function SWEP:Initialize()
 end
 
 function SWEP:PrimaryAttack()
+	return false
 end
 
 function SWEP:SecondaryAttack()
+	return false
 end
-
-function SWEP:Think() end
 
 function SWEP:Step()
     local owner = self:GetOwner()
@@ -114,3 +114,44 @@ hook.Add("HUDPaint","binokle",function()
         draw.SimpleText(i * step,"DefaultFixedDropShadow",pos.x,25,white,TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER)
     end
 end)
+
+local model = GDrawWorldModel or ClientsideModel(SWEP.WorldModel,RENDER_GROUP_OPAQUE_ENTITY)
+GDrawWorldModel = model
+model:SetNoDraw(true)
+
+SWEP.dwmForward = 5
+SWEP.dwmRight = 5
+SWEP.dwmUp = 3
+
+SWEP.dwmAUp = 0
+SWEP.dwmARight = 0
+SWEP.dwmAForward = 180
+function SWEP:DrawWorldModel()
+	local owner = self:GetOwner()
+	if not IsValid(owner) then
+		self:DrawModel()
+		return
+	elseif self:GetNWBool("Focus") then
+		return
+	end
+
+	local Pos,Ang = owner:GetBonePosition(owner:LookupBone("ValveBiped.Bip01_R_Hand"))
+	if not Pos then return end
+
+	model:SetModel(self.WorldModel)
+
+	Pos:Add(Ang:Forward() * self.dwmForward)
+	Pos:Add(Ang:Right() * self.dwmRight)
+	Pos:Add(Ang:Up() * self.dwmUp)
+
+	model:SetPos(Pos)
+
+	Ang:RotateAroundAxis(Ang:Up(),self.dwmAUp)
+	Ang:RotateAroundAxis(Ang:Right(),self.dwmARight)
+	Ang:RotateAroundAxis(Ang:Forward(),self.dwmAForward)
+	model:SetAngles(Ang)
+
+	model:SetModelScale(0.9)
+
+	model:DrawModel()
+end

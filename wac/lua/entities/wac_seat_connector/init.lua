@@ -2,17 +2,17 @@
 AddCSLuaFile("cl_init.lua")
 AddCSLuaFile("shared.lua")
 include("shared.lua")
-include("entities/base_wire_entity.lua")
+-- include("entities/base_wire_entity.lua")
 
 
 util.AddNetworkString("wac.seatSwitcher.switch")
 
 
 function ENT:Initialize()
-	self.Entity:SetModel("models/props_c17/consolebox01a.mdl")
-	self.Entity:PhysicsInit(SOLID_VPHYSICS)
-	self.Entity:SetMoveType(MOVETYPE_VPHYSICS)
-	self.Entity:SetSolid(SOLID_VPHYSICS)
+	self:SetModel("models/props_c17/consolebox01a.mdl")
+	self:PhysicsInit(SOLID_VPHYSICS)
+	self:SetMoveType(MOVETYPE_VPHYSICS)
+	self:SetSolid(SOLID_VPHYSICS)
 	self.seats = {}
 end
 
@@ -47,7 +47,7 @@ end
 function ENT:addVehicle(e)
 	if table.HasValue(self.seats, e) then return end
 	table.insert(self.seats, e)
-	e.wac_seatswitcher = self.Entity
+	e.wac_seatswitcher = self
 	self:updateSeats()
 end
 
@@ -104,7 +104,7 @@ end
 
 
 function ENT:BuildDupeInfo()
-	local info=WireLib.BuildDupeInfo(self.Entity) or {}
+	local info=WireLib.BuildDupeInfo(self) or {}
 	info.v={}
 	for k,v in pairs(self.seats) do
 		info.v[k]=v:EntIndex()

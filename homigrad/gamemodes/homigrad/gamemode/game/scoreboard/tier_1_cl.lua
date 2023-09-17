@@ -131,7 +131,7 @@ local function ToggleScoreboard(toggle)
 			draw.SimpleText("Статус","HomigradFont",100,15,white,TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER)
 			draw.SimpleText("Имя","HomigradFont",w / 2,15,white,TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER)
 
-			draw.SimpleText("HOMIGRADED","HomigradFontLarge",w / 2,h / 2,Color(155,155,165,5),TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER)
+			draw.SimpleText("OpenGrad","HomigradFontLarge",w / 2,h / 2,Color(155,155,165,5),TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER)
 			
 			draw.SimpleText("Наиграно","HomigradFont",w - 300,15,white,TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER)
 			--draw.SimpleText("Дни Часы Минуты","HomigradFont",w - 300,20,white,TEXT_ALIGN_CENTER,TEXT_ALIGN_CENTER)

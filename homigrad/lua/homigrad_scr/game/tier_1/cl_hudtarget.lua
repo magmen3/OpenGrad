@@ -41,7 +41,7 @@ hook.Add("HUDPaint","homigrad-huynyui",function()
 
 	if not lply:Alive() then return end
 
-	if IsValid(lply:GetActiveWeapon()) and lply:GetActiveWeapon():GetClass() != "weapon_hands" then
+	if IsValid(lply:GetActiveWeapon()) and lply:GetActiveWeapon():GetClass() ~= "weapon_hands" then
 		local ply = lply
 		local t = {}
 		local eye = ply:GetAttachment(ply:LookupAttachment("eyes"))

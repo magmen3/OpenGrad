@@ -1,6 +1,6 @@
 PickTable = {}
 PickLerp = {}
---[[hook.Add( "HUDWeaponPickedUp", "WeaponPickedUp", function( weapon )
+hook.Add( "HUDWeaponPickedUp", "WeaponPickedUp", function( weapon )
 	table.insert( PickTable, weapon:GetPrintName() )
 	--PrintTable(PickTable)
 	timer.Simple(5,function()
@@ -27,14 +27,15 @@ hook.Add( "HUDAmmoPickedUp", "AmmoPickedUp", function( ammo, ammout )
 	end)
 end )
 
-function GAMEMODE:HUDDrawPickupHistory()
+hook.Add("HUDDrawPickupHistory", "HudJoskii", function()
 	for i = 1, table.Count( PickTable ) do
 		if PickTable[i] then
 			PickLerp[i] = Lerp(5*FrameTime(),PickLerp[i] or 0,(i-1)*20)
-			draw.DrawText( "+ "..PickTable[i], "HomigradFontBig", ScrW()-5, ScrH()/3+PickLerp[i], color_white, TEXT_ALIGN_RIGHT )
+			draw.DrawText( "+ "..PickTable[i], "HomigradFontBig", ScrW() - 20, ScrH() / 3 + PickLerp[i], color_white, TEXT_ALIGN_RIGHT )
 		end
 	end
-end]]--
+	return false
+end)
 
 local Vector = Vector
 local vecZero,angZero = Vector(0,0,0),Angle(0,0,0)
@@ -243,10 +244,10 @@ local function PrintWeaponInfo(self,x,y,alpha)
 		local text_color = "<color=150,150,150,255>"
 
 		str = "<font=HudSelectionText>"
-		if self.Author != "" then str = str .. title_color .. "Автор:</color>\t"..text_color..self.Author.."</color>\n" end
-		--if ( self.Contact != "" ) then str = str .. title_color .. "Contact:</color>\t"..text_color..self.Contact.."</color>\n\n" end
-		--if ( self.Purpose != "" ) then str = str .. title_color .. "Purpose:</color>\n"..text_color..self.Purpose.."</color>\n\n" end
-		if self.Instructions != "" then str = str .. title_color .. "Инструкция:</color>\t"..text_color..self.Instructions.."</color>\n" end
+		if self.Author ~= "" then str = str .. title_color .. "Автор:</color>\t"..text_color..self.Author.."</color>\n" end
+		--if ( self.Contact ~= "" ) then str = str .. title_color .. "Contact:</color>\t"..text_color..self.Contact.."</color>\n\n" end
+		--if ( self.Purpose ~= "" ) then str = str .. title_color .. "Purpose:</color>\n"..text_color..self.Purpose.."</color>\n\n" end
+		if self.Instructions ~= "" then str = str .. title_color .. "Описание:</color>\t"..text_color..self.Instructions.."</color>\n" end
 		str = str .. "</font>"
 
 		self.InfoMarkup = markup.Parse(str,250)
@@ -308,6 +309,5 @@ DrawWeaponSelectionEX = function(self,x,y,wide,tall,alpha)
 	if self.PrintWeaponInfo then PrintWeaponInfo(self,x + wide,y + tall,alpha) end
 end
 
-local white = Color(255,255,255)
 DrawWeaponSelection = function(self,x,y,w,h,alpha) DrawWeaponSelectionEX(self,x,y,w,h + 35,alpha) end
 OverridePaintIcon = function(self,x,y,w,h,obj) DrawWeaponSelectionEX(obj,x + 5,y + 5,w - 10,h - 30) end

@@ -121,7 +121,7 @@ table.insert(models,"models/player/group02/male_06.mdl")
 table.insert(models,"models/player/group02/male_08.mdl")
 
 function nextbot.PlayerSpawn(ply,teamID)
-	ply:SetModel(models[math.random(#models)])
+	ply:SetModel(models[math.random(#models)] or "models/player/group01/male_03.mdl")
     ply:SetPlayerColor(team.GetColor(ply:Team()):ToVector())
 
     ply:Give("weapon_hands")

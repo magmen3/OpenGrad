@@ -32,8 +32,7 @@ local validUserGroupSuperAdmin = {
 }
 
 local validUserGroup = {
-	megapenis = true,
-	meagsponsor = true
+	operator = true,
 }
 
 function COMMAND_GETASSES(ply)
@@ -138,19 +137,19 @@ end)
 
 local PlayerMeta = FindMetaTable("Player")
 
-util.AddNetworkString("chatprint")
+--[[util.AddNetworkString("chatprint")
 function PlayerMeta:ChatPrint(text)
 	net.Start("chatprint")
 	net.WriteString(text)
 	net.Send(self)
-end
+end]]--
 
-util.AddNetworkString("consoleprint")
+--[[util.AddNetworkString("consoleprint")
 function PlayerMeta:ConsolePrint(text)
 	net.Start("consoleprint")
 	net.WriteString(text)
 	net.Send(self)
-end
+end]]--
 
 COMMANDS.help = {function(ply,args)
 	local text = ""
@@ -213,9 +212,7 @@ end}
 local validUserGroup = {
 	superadmin = true,
 	admin = true,
-	meagsponsor = true,
-	viptest = true,
-	donator = true
+	operator = true,
 }
 
 local function getNotDonaters()
@@ -239,7 +236,7 @@ local function getDonaters()
 end
 
 hook.Add("CheckPassword","sync",function(steamID)
-	steamID = util.SteamIDFrom64(steamID)
+	--[[steamID = util.SteamIDFrom64(steamID)
 
 	local group = ULib.ucl.users[steamID]
 	if group and validUserGroup[group.group] then
@@ -251,7 +248,7 @@ hook.Add("CheckPassword","sync",function(steamID)
 
 	if MaxPlayers and #getNotDonaters() + 1 > MaxPlayers then
 		return false,"limit players\nСервер заполнен, но есть еще донат слоты!\nМожете их купить здесь http://80.85.241.23"
-	end
+	end]]--
 
 	if Sync then return false,"xd" end
 end)
@@ -272,7 +269,7 @@ COMMANDS.setmaxplayers = {function(ply,args)
 	PrintMessageChat(3,"Лимит игроков : " .. tostring(MaxPlayers))
 end}
 
-CloseDev = tobool(SData_Get("dev"))
+--[[CloseDev = tobool(SData_Get("dev"))
 
 COMMANDS.closedev = {function(ply,args)
 	CloseDev = tonumber(args[1]) > 0
@@ -284,7 +281,7 @@ COMMANDS.closedev = {function(ply,args)
 	else
 		PrintMessageChat(3,"Сервер открыт")
 	end
-end}
+end}]]--
 
 function player.GetListByName(name)
 	local list = {}

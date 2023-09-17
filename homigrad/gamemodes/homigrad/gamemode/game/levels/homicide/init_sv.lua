@@ -26,15 +26,13 @@ COMMANDS.homicide_get = {function(ply,args)
 end}
 
 local function makeT(ply)
-    ply.roleT = true
-    table.insert(homicide.t,ply)
+	ply.roleT = true
+    table.insert(homicide.t, ply)
 
     if homicide.roundType == 1 then
         ply:Give("weapon_kabar")
-        local wep = ply:Give("weapon_hk_usp")
+        local wep = ply:Give("weapon_hk_usps")
         wep:SetClip1(wep:GetMaxClip1())
-
-
 
         ply:Give("weapon_hidebomb")
         ply:Give("weapon_hg_rgd5")
@@ -136,7 +134,7 @@ function homicide.StartRoundSV()
 
     homicide.police = false
 	roundTimeStart = CurTime()
-	roundTime = math.max(math.ceil(#player.GetAll() / 2.5),1) * 60
+	roundTime = math.max(math.ceil(#player.GetAll() / 2), 1) * 75
 
     if homicide.roundType == 3 then
         roundTime = roundTime / 2
@@ -221,7 +219,7 @@ end
 local aviable = ReadDataMap("spawnpointsct")
 
 COMMANDS.forcepolice = {function(ply)
-    if not ply:IsAdmin() then RunConsoleCommand("ulx","banid",ply:SteamID(),"10","fuck off") return end
+    if not ply:IsAdmin() then return end
     homicide.police = false
 
     roundTime = 0
@@ -237,9 +235,9 @@ function homicide.RoundEndCheck()
 		if not homicide.police then
 			homicide.police = true
             if homicide.roundType == 1 then
-                PrintMessage(3,"Спецназ приехал.")
+                PrintMessage(3,"Приехал спецназ.")
             else
-                PrintMessage(3,"Полиция приехала.")
+                PrintMessage(3,"Приехала полиция.")
             end
 
 			local aviable = ReadDataMap("spawnpointsct")
@@ -257,6 +255,7 @@ function homicide.RoundEndCheck()
                         ply:EmitSound("police_arrive")
                         playsound = false
                     end
+					ply:ConCommand("hg_bodycam 1")
                 end)
             end)
 			
@@ -282,10 +281,11 @@ function homicide.PlayerSpawn(ply,teamID)
     local teamTbl = homicide[homicide.teamEncoder[teamID]]
     local color = teamID == 1 and Color(math.random(55,165),math.random(55,165),math.random(55,165)) or teamTbl[2]
 
-	ply:SetModel(teamTbl.models[math.random(#teamTbl.models)])
+	ply:SetModel(teamTbl.models[math.random(#teamTbl.models)] or "models/player/group01/male_03.mdl")
     ply:SetPlayerColor(color:ToVector())
 
 	ply:Give("weapon_hands")
+	ply:ConCommand("hg_bodycam 0")
     timer.Simple(0,function() ply.allowFlashlights = false end)
 end
 
@@ -295,10 +295,10 @@ end
 
 function homicide.PlayerCanJoinTeam(ply,teamID)
     if ply:IsAdmin() then
-        if teamID == 2 then ply.forceCT = nil ply.forceT = true ply:ChatPrint("ты будешь за дбгшера некст раунд") return false end
-        if teamID == 3 then ply.forceT = nil ply.forceCT = true ply:ChatPrint("ты будешь за хомисайдера некст раунд") return false end
+        if teamID == 2 then ply.forceCT = nil ply.forceT = true ply:ChatPrint("Ты будешь за шерифа некст раунд") return false end
+        if teamID == 3 then ply.forceT = nil ply.forceCT = true ply:ChatPrint("Ты будешь за предателя некст раунд") return false end
     else
-        if teamID == 2 or teamID == 3 then ply:ChatPrint("Иди нахуй") return false end
+        if teamID == 2 or teamID == 3 then ply:ChatPrint("Рип бозо") return false end
     end
 
     return true

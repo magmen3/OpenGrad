@@ -190,7 +190,7 @@ function ENT:InitializeVehicle()
 	self.DriverSeat:SetColor( Color( 255, 255, 255, 0 ) ) 
 	self.DriverSeat:SetRenderMode( RENDERMODE_TRANSALPHA )
 	self.DriverSeat:DrawShadow( false )
-	simfphys.SetOwner( self.EntityOwner, self.DriverSeat )
+	simfphys.SetOwner( selfOwner, self.DriverSeat )
 	
 	if self.PassengerSeats then
 		for i = 1, table.Count( self.PassengerSeats ) do
@@ -211,7 +211,7 @@ function ENT:InitializeVehicle()
 			self.pSeat[i].fphysSeat = true
 			self.pSeat[i].base = self
 			self.pSeat[i].DoNotDuplicate = true
-			simfphys.SetOwner( self.EntityOwner, self.pSeat[i] )
+			simfphys.SetOwner( selfOwner, self.pSeat[i] )
 			
 			self.pSeat[i]:DrawShadow( false )
 			self.pSeat[i]:GetPhysicsObject():EnableMotion( false )
@@ -250,7 +250,7 @@ function ENT:InitializeVehicle()
 			prop:SetNotSolid( true )
 			prop:SetParent( self )
 			prop.DoNotDuplicate = true
-			simfphys.SetOwner( self.EntityOwner, prop )
+			simfphys.SetOwner( selfOwner, prop )
 			
 			if self.Attachments[i].skin then
 				prop:SetSkin( self.Attachments[i].skin )
@@ -461,7 +461,7 @@ function ENT:SetupVehicle()
 	self.MassOffset:SetNotSolid( true )
 	self.MassOffset:SetNoDraw( true )
 	self.MassOffset.DoNotDuplicate = true
-	simfphys.SetOwner( self.EntityOwner, self.MassOffset )
+	simfphys.SetOwner( selfOwner, self.MassOffset )
 	
 	local weld = constraint.Weld(self.MassOffset,self, 0, 0, 0,true, true) 
 	weld.DoNotDuplicate = true
@@ -472,8 +472,8 @@ function ENT:SetupVehicle()
 	if self.CustomWheels then
 		if self.CustomWheelModel then
 			if not file.Exists( self.CustomWheelModel, "GAME" ) then 
-				if IsValid( self.EntityOwner ) then
-					self.EntityOwner:PrintMessage( HUD_PRINTTALK, "ERROR: \""..self.CustomWheelModel.."\" does not exist! Removing vehicle. (Class: "..self:GetSpawn_List()..")")
+				if IsValid( selfOwner ) then
+					selfOwner:PrintMessage( HUD_PRINTTALK, "ERROR: \""..self.CustomWheelModel.."\" does not exist! Removing vehicle. (Class: "..self:GetSpawn_List()..")")
 				end
 				self:Remove()
 				return
@@ -492,8 +492,8 @@ function ENT:SetupVehicle()
 				if IsValid(pobj) then
 					pobj:EnableMotion(false)
 				else
-					if IsValid( self.EntityOwner ) then
-						self.EntityOwner:PrintMessage( HUD_PRINTTALK, "ERROR: \""..self.CustomWheelModel.."\" doesn't have an collision model! Removing vehicle. (Class: "..self:GetSpawn_List()..")")
+					if IsValid( selfOwner ) then
+						selfOwner:PrintMessage( HUD_PRINTTALK, "ERROR: \""..self.CustomWheelModel.."\" doesn't have an collision model! Removing vehicle. (Class: "..self:GetSpawn_List()..")")
 					end
 					self.SteerMaster:Remove()
 					self:Remove()
@@ -507,7 +507,7 @@ function ENT:SetupVehicle()
 				self.SteerMaster:SetNoDraw( true )
 				self.SteerMaster.DoNotDuplicate = true
 				self:DeleteOnRemove( self.SteerMaster )
-				simfphys.SetOwner( self.EntityOwner, self.SteerMaster )
+				simfphys.SetOwner( selfOwner, self.SteerMaster )
 			end
 			
 			if self.SteerRear then
@@ -522,8 +522,8 @@ function ENT:SetupVehicle()
 				if IsValid(pobj) then
 					pobj:EnableMotion(false)
 				else
-					if IsValid( self.EntityOwner ) then
-						self.EntityOwner:PrintMessage( HUD_PRINTTALK, "ERROR: \""..self.CustomWheelModel.."\" doesn't have an collision model! Removing vehicle. (Class: "..self:GetSpawn_List()..")")
+					if IsValid( selfOwner ) then
+						selfOwner:PrintMessage( HUD_PRINTTALK, "ERROR: \""..self.CustomWheelModel.."\" doesn't have an collision model! Removing vehicle. (Class: "..self:GetSpawn_List()..")")
 					end
 					self.SteerMaster2:Remove()
 					self:Remove()
@@ -536,7 +536,7 @@ function ENT:SetupVehicle()
 				self.SteerMaster2:SetNoDraw( true )
 				self.SteerMaster2.DoNotDuplicate = true
 				self:DeleteOnRemove( self.SteerMaster2 )
-				simfphys.SetOwner( self.EntityOwner, self.SteerMaster2 )
+				simfphys.SetOwner( selfOwner, self.SteerMaster2 )
 			end
 			
 			local radius = IsValid(self.SteerMaster) and (self.SteerMaster:OBBMaxs() - self.SteerMaster:OBBMins()) or (self.SteerMaster2:OBBMaxs() - self.SteerMaster2:OBBMins())
@@ -556,8 +556,8 @@ function ENT:SetupVehicle()
 				self:CreateWheel(6, WheelMR, self:LocalToWorld( self.CustomWheelPosMR ), self.RearHeight, self.RearWheelRadius, true , self:LocalToWorld( self.CustomWheelPosMR + Vector(0,0,self.CustomSuspensionTravel * 0.5) ), self.CustomSuspensionTravel, self.RearConstant, self.RearDamping, self.RearRelativeDamping)
 			end
 		else
-			if IsValid( self.EntityOwner ) then
-				self.EntityOwner:PrintMessage( HUD_PRINTTALK, "ERROR: no wheel model defined. Removing vehicle. (Class: "..self:GetSpawn_List()..")")
+			if IsValid( selfOwner ) then
+				selfOwner:PrintMessage( HUD_PRINTTALK, "ERROR: no wheel model defined. Removing vehicle. (Class: "..self:GetSpawn_List()..")")
 			end
 			self:Remove()
 		end
@@ -630,8 +630,8 @@ function ENT:CreateWheel(index, name, attachmentpos, height, radius, swap_y , po
 	self.name:GetPhysicsObject():EnableMotion(false)
 	self.name:GetPhysicsObject():SetMass( WheelMass ) 
 	self.name:SetBaseEnt( self )
-	simfphys.SetOwner( self.EntityOwner, self.name )
-	self.name.EntityOwner = self.EntityOwner
+	simfphys.SetOwner( selfOwner, self.name )
+	self.name.EntityOwner = selfOwner
 	self.name.Index = index
 	self.name.Radius = radius
 	
@@ -657,7 +657,7 @@ function ENT:CreateWheel(index, name, attachmentpos, height, radius, swap_y , po
 		self.GhostWheels[index].DoNotDuplicate = true
 		self.GhostWheels[index]:SetParent( self.name )
 		self:DeleteOnRemove( self.GhostWheels[index] )
-		simfphys.SetOwner( self.EntityOwner, self.GhostWheels[index] )
+		simfphys.SetOwner( selfOwner, self.GhostWheels[index] )
 		
 		self.GhostWheels[index]:SetRenderMode( RENDERMODE_TRANSALPHA )
 		

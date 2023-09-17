@@ -38,7 +38,7 @@ function riot.PlayerInitialSpawn(ply) ply:SetTeam(math.random(1,2)) end
 function riot.PlayerSpawn(ply,teamID)
 	local teamTbl = riot[riot.teamEncoder[teamID]]
 	local color = teamTbl[2]
-	ply:SetModel(teamTbl.models[math.random(#teamTbl.models)])
+	ply:SetModel(teamTbl.models[math.random(#teamTbl.models)] or "models/player/group01/male_03.mdl")
 
     ply:SetPlayerColor(color:ToVector())
 

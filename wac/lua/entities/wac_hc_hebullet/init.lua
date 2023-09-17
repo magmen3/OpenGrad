@@ -4,11 +4,11 @@ AddCSLuaFile("shared.lua")
 include("shared.lua")
 
 function ENT:Initialize()
-	self.Entity:SetModel("models/props_junk/popcan01a.mdl")		
-	self.Entity:PhysicsInit(SOLID_VPHYSICS)
-	self.Entity:SetMoveType(MOVETYPE_VPHYSICS)
-	self.Entity:SetSolid(SOLID_VPHYSICS)
-	self.phys = self.Entity:GetPhysicsObject()
+	self:SetModel("models/props_junk/popcan01a.mdl")		
+	self:PhysicsInit(SOLID_VPHYSICS)
+	self:SetMoveType(MOVETYPE_VPHYSICS)
+	self:SetSolid(SOLID_VPHYSICS)
+	self.phys = self:GetPhysicsObject()
 	if self.phys:IsValid() then
 		self.phys:SetMass(5)
 	end	
@@ -27,7 +27,7 @@ function ENT:Initialize()
 	local col=Color(self.col.r,self.col.g,self.col.b,255)
 	self:SetColor(col)
 	col.a=50
-	local trail=util.SpriteTrail(self.Entity, 0, col, false, self.Size/2, self.Size/8, self.Size/40, 1/self.Size/2*0.5, "trails/smoke.vmt")	
+	local trail=util.SpriteTrail(self, 0, col, false, self.Size/2, self.Size/8, self.Size/40, 1/self.Size/2*0.5, "trails/smoke.vmt")	
 	self.startTime=CurTime()
 	self.canThink=true
 	self.IsBullet=true
@@ -41,16 +41,15 @@ ENT.Explode=function(self,tr)
 	if self.Exploded then return end
 	self.Exploded = true
 	if !tr.HitSky then
-		self.Owner = self.Owner or self.Entity
 		local explode=ents.Create("env_physexplosion")
 		explode:SetPos(tr.HitPos)
-		explode:SetOwner(self.Owner)
+		explode:SetOwner(self:GetOwner())
 		explode:Spawn()
 		explode:SetKeyValue("magnitude", self.Damage/4)
 		explode:SetKeyValue("radius", self.Radius)
 		explode:Fire("Explode", 0, 0)
 		timer.Simple(5,function() explode:Remove() end)
-		util.BlastDamage(self, self.Owner, tr.HitPos, self.Radius, self.Damage)
+		util.BlastDamage(self, self:GetOwner(), tr.HitPos, self.Radius, self.Damage)
 
 		--[[net.Start("gred_net_createparticle")
 		
@@ -78,7 +77,7 @@ ENT.Explode=function(self,tr)
 		util.Effect("chloeimpact_groundcrack",fx,true,true)
 	end
 
-	self.Entity:Remove()
+	self:Remove()
 end
 
 function ENT:PhysicsUpdate(ph)
@@ -94,13 +93,13 @@ function ENT:PhysicsUpdate(ph)
 	local trace = {}
 	trace.start = pos
 	trace.endpos = pos+difference
-	trace.filter = self.Entity
+	trace.filter = self
 	trace.mask=CONTENTS_SOLID + CONTENTS_MOVEABLE + CONTENTS_OPAQUE + CONTENTS_DEBRIS + CONTENTS_HITBOX + CONTENTS_MONSTER + CONTENTS_WINDOW + CONTENTS_WATER
 	local tr = util.TraceLine(trace)
 	if tr.Hit then
 		self.Explode(self,tr)
 	elseif (self.canThink or speed>50) and !self.NoTele then
-		self.Entity:SetPos(pos + difference)
+		self:SetPos(pos + difference)
 	end
 end
 

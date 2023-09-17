@@ -14,8 +14,8 @@ function SWEP:Initialize()
 		self:CreateModels(self.WElements) -- create worldmodels
 		
 		-- init view model bone build function
-		if IsValid(self.Owner) then
-			local vm = self.Owner:GetViewModel()
+		if IsValid(self:GetOwner()) then
+			local vm = self:GetOwner():GetViewModel()
 			if IsValid(vm) then
 				self:ResetBonePositions(vm)
 				
@@ -40,8 +40,8 @@ end
 
 function SWEP:Holster()
 	
-	if CLIENT and IsValid(self.Owner) then
-		local vm = self.Owner:GetViewModel()
+	if CLIENT and IsValid(self:GetOwner()) then
+		local vm = self:GetOwner():GetViewModel()
 		if IsValid(vm) then
 			self:ResetBonePositions(vm)
 		end
@@ -59,7 +59,7 @@ if CLIENT then
 	SWEP.vRenderOrder = nil
 	function SWEP:ViewModelDrawn()
 		
-		local vm = self.Owner:GetViewModel()
+		local vm = self:GetOwner():GetViewModel()
 		if !IsValid(vm) then return end
 		
 		if (!self.VElements) then return end
@@ -187,8 +187,8 @@ if CLIENT then
 
 		end
 		
-		if (IsValid(self.Owner)) then
-			bone_ent = self.Owner
+		if (IsValid(self:GetOwner())) then
+			bone_ent = self:GetOwner()
 		else
 			-- when the weapon is dropped
 			bone_ent = self
@@ -313,8 +313,8 @@ if CLIENT then
 				pos, ang = m:GetTranslation(), m:GetAngles()
 			end
 			
-			if (IsValid(self.Owner) and self.Owner:IsPlayer() and 
-				ent == self.Owner:GetViewModel() and self.ViewModelFlip) then
+			if (IsValid(self:GetOwner()) and self:GetOwner():IsPlayer() and 
+				ent == self:GetOwner():GetViewModel() and self.ViewModelFlip) then
 				ang.r = -ang.r -- Fixes mirrored models
 			end
 		
@@ -532,27 +532,27 @@ SWEP.AutoSwitchFrom = false
 SWEP.ThinkDelay = 0
 
 function SWEP:Throw()
-	self.Weapon:SendWeaponAnim(ACT_VM_THROW)
-	self.Owner:SetAnimation(PLAYER_ATTACK1)
+	self:SendWeaponAnim(ACT_VM_THROW)
+	self:GetOwner():SetAnimation(PLAYER_ATTACK1)
 	function Throw()
 		if SERVER then
 			grenade = ents.Create("ent_jack_gmod_ezsticknadebundle")
-			local v = self.Owner:GetShootPos()
-			v = v + self.Owner:GetForward() * 10
-			v = v + self.Owner:GetRight() * 10
-			v = v + self.Owner:GetUp() * 10
+			local v = self:GetOwner():GetShootPos()
+			v = v + self:GetOwner():GetForward() * 10
+			v = v + self:GetOwner():GetRight() * 10
+			v = v + self:GetOwner():GetUp() * 10
 			grenade:SetPos( v )
-			grenade:SetAngles(self.Owner:EyeAngles()+Angle(45,45,0))
-			grenade:SetOwner(self.Owner)
-			grenade:SetPhysicsAttacker(self.Owner)
+			grenade:SetAngles(self:GetOwner():EyeAngles()+Angle(45,45,0))
+			grenade:SetOwner(self:GetOwner())
+			grenade:SetPhysicsAttacker(self:GetOwner())
 			grenade:Spawn()       
 			grenade:Arm()
 			local phys = grenade:GetPhysicsObject()              
 			if not IsValid(phys) then grenade:Remove() return end                         
-			phys:SetVelocity(self.Owner:GetVelocity() + self.Owner:GetAimVector() * 550)
+			phys:SetVelocity(self:GetOwner():GetVelocity() + self:GetOwner():GetAimVector() * 550)
 			phys:AddAngleVelocity(VectorRand() * 70)
 			self:Remove()
-			self.Owner:SelectWeapon("weapon_hands")
+			self:GetOwner():SelectWeapon("weapon_hands")
 		end
 	end
 	timer.Simple(0.1,Throw)
@@ -560,23 +560,23 @@ function SWEP:Throw()
 end
 
 function SWEP:SoftThrow()
-	self.Weapon:SendWeaponAnim(ACT_VM_SECONDARYATTACK)
-	self.Owner:SetAnimation(PLAYER_ATTACK1)
+	self:SendWeaponAnim(ACT_VM_SECONDARYATTACK)
+	self:GetOwner():SetAnimation(PLAYER_ATTACK1)
 	function SoftThrow()
 		if SERVER then
 			grenade = ents.Create("ent_jack_gmod_ezsticknadebundle")
-			grenade:SetPos(self.Owner:GetShootPos() +self.Owner:GetAimVector()*10)
-			grenade:SetAngles(self.Owner:EyeAngles()+Angle(45,45,0))
-			grenade:SetOwner(self.Owner)
-			grenade:SetPhysicsAttacker(self.Owner)
+			grenade:SetPos(self:GetOwner():GetShootPos() +self:GetOwner():GetAimVector()*10)
+			grenade:SetAngles(self:GetOwner():EyeAngles()+Angle(45,45,0))
+			grenade:SetOwner(self:GetOwner())
+			grenade:SetPhysicsAttacker(self:GetOwner())
 			grenade:Spawn()       
 			grenade:Arm()
 			local phys = grenade:GetPhysicsObject()              
 			if not IsValid(phys) then grenade:Remove() return end                         
-			phys:SetVelocity(self.Owner:GetVelocity() + self.Owner:GetAimVector() * 350)
+			phys:SetVelocity(self:GetOwner():GetVelocity() + self:GetOwner():GetAimVector() * 350)
 			phys:AddAngleVelocity(VectorRand() * 200)
 			self:Remove()
-			self.Owner:SelectWeapon("weapon_hands")
+			self:GetOwner():SelectWeapon("weapon_hands")
 		end
 	end
 	timer.Simple(0.1,SoftThrow)
@@ -585,19 +585,19 @@ end
 
 
 function SWEP:PrimaryAttack()
-	if self.Owner:GetAmmoCount(self.Primary.Ammo) <= 0 then return end
+	if self:GetOwner():GetAmmoCount(self.Primary.Ammo) <= 0 then return end
 	self:Throw()
 
-	self.Owner:SetAnimation(PLAYER_ATTACK1)
+	self:GetOwner():SetAnimation(PLAYER_ATTACK1)
 
 
 end
  
 function SWEP:SecondaryAttack()
-	if self.Owner:GetAmmoCount(self.Primary.Ammo) <= 0 then return end
+	if self:GetOwner():GetAmmoCount(self.Primary.Ammo) <= 0 then return end
 	self:SoftThrow()
 	
-	self.Owner:SetAnimation(PLAYER_ATTACK1)
+	self:GetOwner():SetAnimation(PLAYER_ATTACK1)
 	
 
 end
