@@ -11,5 +11,5 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=3036510525
 https://discord.gg/jm9RdYPXSu
 
 # Credits
-sadsalat, useless, and Mr. Point for original gamemode
+sadsalat, useless, and Mr. Point for original gamemode,
 Mannytko for fixing and optimizing gamemode
