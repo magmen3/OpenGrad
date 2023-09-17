@@ -1,17 +1,11 @@
-# Original-Homigrad
-# _You've been waiting. We did it._ 
-From now on the “Homigrad” gamemode is open source for everyone.
+# OpenGrad (or Modded Homigrad)
+# _Fixed and optimized version of Homigrad gamemode!_
 
-
-Contributors: Sadsalat, Useless and Mr. Point
-
-- Shame to 0oa for betraying us at the gamemode online peak. 
+At the moment all bugs that broke the gamemode are fixed (script errors remain, but do not affect the gamemode in any way).
 
 # How to install?
-Just put it in addons and download the following collections:
+Just put it in addons and download the workshop collection:
+https://steamcommunity.com/sharedfiles/filedetails/?id=3036510525
 
-https://steamcommunity.com/sharedfiles/filedetails/?id=2957550771
-
-and
-
-https://steamcommunity.com/sharedfiles/filedetails/?id=3011836097
+# Discord server (only RUS)
+https://discord.gg/jm9RdYPXSu
