@@ -9,3 +9,7 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=3036510525
 
 # Discord server (only RUS)
 https://discord.gg/jm9RdYPXSu
+
+# Credits
+sadsalat, useless, and Mr. Point for original gamemode
+Mannytko for fixing and optimizing gamemode
