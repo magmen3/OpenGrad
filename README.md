@@ -8,10 +8,7 @@ At the moment all bugs that broke the gamemode are fixed (script errors remain, 
 Just put it in addons and download the workshop collection:
 https://steamcommunity.com/sharedfiles/filedetails/?id=3036510525
 
-# Discord server (only RUS)
-https://discord.gg/jm9RdYPXSu
-
 # Credits
-sadsalat, useless, and Mr. Point for original gamemode
-Mannytko for fixing and optimizing gamemode
+sadsalat, useless, and Mr. Point for original gamemode,
+Mannytko for fixing and optimizing gamemode,
 Hari for fixing, adding new stuff in gamemode
