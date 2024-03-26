@@ -1,4 +1,4 @@
-# OpenGrad (or Modded Homigrad)
+# OpenGrad (or Modded Homigrad) (UNSUPPORTED)
 # _Fixed and optimized version of Homigrad gamemode!_
 
 At the moment all bugs that broke the gamemode are fixed (script errors remain, but do not affect the gamemode in any way).
