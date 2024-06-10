@@ -45,8 +45,8 @@ SWEP.SlotPos				= 1
 SWEP.DrawAmmo				= true
 SWEP.DrawCrosshair			= false
 
-SWEP.ViewModel				= "models/weapons/insurgency/w_makarov.mdl"
-SWEP.WorldModel				= "models/weapons/insurgency/w_makarov.mdl"
+SWEP.ViewModel				= "models/weapons/w_pist_p228.mdl"
+SWEP.WorldModel				= "models/weapons/w_pist_p228.mdl"
 
 SWEP.vbwPos = Vector(8,0,-6)
 SWEP.addPos = Vector(0,0,0.2)
